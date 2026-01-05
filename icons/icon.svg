@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#1a1a2e"/>
+  <rect x="60" y="120" width="392" height="272" rx="20" fill="#16213e" stroke="#00d4ff" stroke-width="8"/>
+  <text x="256" y="220" text-anchor="middle" fill="#00d4ff" font-family="system-ui" font-size="48" font-weight="bold">STAR</text>
+  <g fill="#e94560">
+    <circle cx="130" cy="320" r="24"/>
+    <circle cx="220" cy="320" r="24"/>
+    <circle cx="310" cy="320" r="24"/>
+    <circle cx="400" cy="320" r="24"/>
+  </g>
+  <text x="130" y="328" text-anchor="middle" fill="white" font-family="system-ui" font-size="24" font-weight="bold">S</text>
+  <text x="220" y="328" text-anchor="middle" fill="white" font-family="system-ui" font-size="24" font-weight="bold">T</text>
+  <text x="310" y="328" text-anchor="middle" fill="white" font-family="system-ui" font-size="24" font-weight="bold">A</text>
+  <text x="400" y="328" text-anchor="middle" fill="white" font-family="system-ui" font-size="24" font-weight="bold">R</text>
+</svg>

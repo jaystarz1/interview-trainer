@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Trainer</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Interview">
+    <meta name="theme-color" content="#00d4ff">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #00d4ff;
+            padding: 10px 0;
+            font-size: 1.4rem;
+        }
+
+        /* Job Selector */
+        .job-selector {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .job-selector label {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .job-selector select {
+            background: #16213e;
+            border: 2px solid #00d4ff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            min-width: 300px;
+        }
+
+        .job-selector select:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+
+        .job-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .job-pay {
+            background: #00ff88;
+            color: #1a1a2e;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .job-deadline {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+        }
+
+        .job-status {
+            color: #fdcb6e;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .mode-btn {
+            padding: 10px 25px;
+            border: 2px solid #333;
+            background: #16213e;
+            color: #888;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            border-color: #00d4ff;
+            color: #00d4ff;
+            background: #0f3460;
+        }
+
+        .mode-btn:hover {
+            border-color: #00d4ff;
+        }
+
+        /* LEFT SIDE - FLASHCARD */
+        .flashcard-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            flex: 1;
+            min-height: 520px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .flashcard-back {
+            justify-content: flex-start;
+            align-items: stretch;
+            text-align: left;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+            border: 2px solid #00d4ff;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border: 2px solid #00ff88;
+            transform: rotateY(180deg);
+        }
+
+        /* Card back sections */
+        .back-section {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .back-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .back-section h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .back-section.terminology h4 { color: #fdcb6e; }
+        .back-section.terminology { border-left: 3px solid #fdcb6e; }
+        .back-section.plain-english h4 { color: #00d4ff; }
+        .back-section.plain-english { border-left: 3px solid #00d4ff; }
+        .back-section.dont-say h4 { color: #ff6b6b; }
+        .back-section.dont-say { border-left: 3px solid #ff6b6b; }
+        .back-section.good-answer h4 { color: #00ff88; }
+        .back-section.good-answer { border-left: 3px solid #00ff88; }
+
+        /* STAR formatting */
+        .star-line {
+            margin-bottom: 6px;
+            line-height: 1.4;
+            font-size: 0.8rem;
+        }
+        .star-line:last-child { margin-bottom: 0; }
+        .star-label {
+            display: inline-block;
+            font-weight: bold;
+            color: #e94560;
+            min-width: 80px;
+        }
+
+        .back-section p {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: #fff;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #fff;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #00d4ff;
+            color: #1a1a2e;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .flashcard-back .category-badge {
+            background: #00ff88;
+        }
+
+        .hint {
+            font-size: 0.85rem;
+            color: #ccc;
+            position: absolute;
+            bottom: 15px;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: #16213e;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+
+        .counter {
+            color: #fff;
+            font-size: 1rem;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* RIGHT SIDE - QUESTION LIST */
+        .list-section {
+            background: #16213e;
+            border-radius: 16px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 280px);
+        }
+
+        .list-section h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            position: sticky;
+            top: 0;
+            background: #16213e;
+            padding: 10px 0;
+        }
+
+        .question-item {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .question-item:hover {
+            border-color: #00d4ff;
+            transform: translateX(5px);
+        }
+
+        .question-item.active {
+            border-color: #00ff88;
+            background: #0f3460;
+        }
+
+        .question-item .q-category {
+            font-size: 0.65rem;
+            color: #00d4ff;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .question-item .q-text {
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        /* Vocab Section */
+        .vocab-section {
+            background: #0f3460;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .vocab-section h3 {
+            color: #fdcb6e;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .vocab-item {
+            background: #1a1a2e;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        .vocab-term {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .vocab-def {
+            color: #ccc;
+            font-size: 0.7rem;
+        }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #ccc;
+            font-size: 0.8rem;
+            padding: 10px;
+        }
+
+        kbd {
+            background: #444;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            border: 1px solid #666;
+        }
+
+        /* PRACTICE MODE */
+        .practice-section {
+            display: none;
+            background: #16213e;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .practice-section.show {
+            display: block;
+        }
+
+        .practice-question {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .record-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .record-btn.ready {
+            background: #e94560;
+            color: white;
+        }
+
+        .record-btn.ready:hover {
+            background: #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        .record-btn.recording {
+            background: #ff6b6b;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .timer {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            font-variant-numeric: tabular-nums;
+            color: #fff;
+        }
+
+        .record-status {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .transcript-box {
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+
+        .transcript-box.show {
+            display: block;
+        }
+
+        .transcript-box h4 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .transcript-text {
+            color: #fff;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .metrics-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .metric {
+            background: #0f3460;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .metric-value.good { color: #00ff88; }
+        .metric-value.ok { color: #fdcb6e; }
+        .metric-value.bad { color: #ff6b6b; }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .practice-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .practice-controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .play-btn { background: #0f3460; color: #fff; }
+        .next-btn { background: #00d4ff; color: #1a1a2e; }
+
+        audio {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        /* STAR reminder */
+        .star-reminder {
+            background: #0f3460;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .star-item {
+            padding: 10px;
+        }
+
+        .star-letter {
+            width: 36px;
+            height: 36px;
+            background: #e94560;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .star-label-item {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        /* Archived jobs styling */
+        .job-selector select optgroup[label="Archived"] {
+            color: #888;
+        }
+
+        /* ================================
+           MOBILE RESPONSIVE STYLES
+           ================================ */
+
+        /* Mobile bottom nav for question list */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #16213e;
+            border-top: 2px solid #00d4ff;
+            padding: 10px 15px;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+
+        .mobile-nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .mobile-nav button {
+            background: #0f3460;
+            border: none;
+            color: #00d4ff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            min-width: 60px;
+            cursor: pointer;
+        }
+
+        .mobile-nav button:active {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+
+        .mobile-counter {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .mobile-list-btn {
+            background: #0f3460 !important;
+            font-size: 0.9rem !important;
+            padding: 12px 16px !important;
+        }
+
+        /* Question list drawer */
+        .list-drawer {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+        }
+
+        .list-drawer.open {
+            display: block;
+        }
+
+        .list-drawer-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 70vh;
+            background: #16213e;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            overflow-y: auto;
+        }
+
+        .list-drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .list-drawer-header h3 {
+            color: #00d4ff;
+            font-size: 1rem;
+        }
+
+        .close-drawer {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        /* Swipe hint */
+        .swipe-hint {
+            display: none;
+            text-align: center;
+            color: #666;
+            font-size: 0.75rem;
+            padding: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 15px;
+                padding-bottom: 100px;
+                gap: 12px;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+                padding: 5px 0;
+            }
+
+            /* Job selector - stack on mobile */
+            .job-selector {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .job-selector label {
+                display: none;
+            }
+
+            .job-selector select {
+                min-width: unset;
+                width: 100%;
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+
+            .job-info {
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            /* Mode toggle */
+            .mode-toggle {
+                gap: 8px;
+            }
+
+            .mode-btn {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+                flex: 1;
+                max-width: 150px;
+            }
+
+            /* Flashcard adjustments */
+            .flashcard-container {
+                min-height: 400px;
+                height: calc(100vh - 350px);
+                max-height: 500px;
+            }
+
+            .flashcard-front, .flashcard-back {
+                padding: 20px;
+                padding-top: 50px;
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .category-badge {
+                font-size: 0.65rem;
+                padding: 4px 10px;
+            }
+
+            .hint {
+                font-size: 0.8rem;
+            }
+
+            /* Card back - tighter spacing */
+            .back-section {
+                margin-bottom: 10px;
+                padding: 8px;
+            }
+
+            .back-section h4 {
+                font-size: 0.65rem;
+            }
+
+            .back-section p {
+                font-size: 0.75rem;
+            }
+
+            .star-line {
+                font-size: 0.75rem;
+                margin-bottom: 4px;
+            }
+
+            .star-label {
+                min-width: 25px;
+                margin-right: 5px;
+            }
+
+            /* Hide desktop nav, show mobile nav */
+            .nav-controls {
+                display: none;
+            }
+
+            .mobile-nav {
+                display: block;
+            }
+
+            .swipe-hint {
+                display: block;
+            }
+
+            /* Hide desktop question list */
+            .list-section {
+                display: none;
+            }
+
+            .keyboard-hint {
+                display: none;
+            }
+
+            /* Practice mode adjustments */
+            .practice-section {
+                padding: 20px;
+            }
+
+            .practice-question {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+
+            .timer {
+                font-size: 36px;
+            }
+
+            .record-btn {
+                width: 100px;
+                height: 100px;
+                font-size: 14px;
+            }
+
+            .star-reminder {
+                padding: 10px;
+                gap: 5px;
+            }
+
+            .star-letter {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+
+            .star-label-item {
+                font-size: 0.7rem;
+            }
+
+            .metrics-row {
+                gap: 10px;
+            }
+
+            .metric {
+                padding: 10px 15px;
+            }
+
+            .metric-value {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 400px) {
+            .container {
+                padding: 10px;
+                padding-bottom: 90px;
+            }
+
+            h1 {
+                font-size: 1rem;
+            }
+
+            .flashcard-container {
+                min-height: 350px;
+                height: calc(100vh - 300px);
+            }
+
+            .question-text {
+                font-size: 1rem;
+            }
+
+            .back-section p,
+            .star-line {
+                font-size: 0.7rem;
+            }
+
+            .mode-btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Landscape phone */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .flashcard-container {
+                min-height: 280px;
+                height: calc(100vh - 180px);
+            }
+
+            .job-selector, .mode-toggle {
+                margin-bottom: 5px;
+            }
+
+            h1 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interview Trainer</h1>
+
+        <!-- Job Selector -->
+        <div class="job-selector">
+            <label for="jobSelect">Prepare for:</label>
+            <select id="jobSelect" onchange="switchJob(this.value)">
+                <optgroup label="Active Applications" id="activeJobs"></optgroup>
+                <optgroup label="Archived" id="archivedJobs"></optgroup>
+            </select>
+            <div class="job-info">
+                <span class="job-pay" id="jobPay">$45-75/hr</span>
+                <span class="job-deadline" id="jobDeadline"></span>
+                <span class="job-status" id="jobStatus"></span>
+            </div>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="studyModeBtn" onclick="setMode('study')">Study Mode</button>
+            <button class="mode-btn" id="practiceModeBtn" onclick="setMode('practice')">Practice Mode</button>
+        </div>
+
+        <!-- LEFT: Flashcard (Study Mode) -->
+        <div class="flashcard-section" id="studySection">
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="flashcard-front">
+                        <span class="category-badge" id="front-category">Loading...</span>
+                        <p class="question-text" id="question-text">Loading question...</p>
+                        <span class="hint">Click to see how to answer</span>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="back-section terminology">
+                            <h4 id="back-term-header">What Is This?</h4>
+                            <p id="back-terminology">Loading...</p>
+                        </div>
+                        <div class="back-section plain-english">
+                            <h4>What They're Really Asking</h4>
+                            <p id="back-plain-english">Loading...</p>
+                        </div>
+                        <div class="back-section dont-say">
+                            <h4>Don't Say This</h4>
+                            <p id="back-dont-say">Loading...</p>
+                        </div>
+                        <div class="back-section good-answer">
+                            <h4>STAR Answer</h4>
+                            <div id="back-good-answer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevCard()">Previous</button>
+                <span class="counter"><span id="current">1</span> / <span id="total">0</span></span>
+                <button class="nav-btn" onclick="nextCard()">Next</button>
+            </div>
+        </div>
+
+        <!-- LEFT: Practice Mode -->
+        <div class="practice-section" id="practiceSection">
+            <div class="practice-question" id="practiceQuestion">Loading question...</div>
+
+            <div class="timer" id="timer">0:00</div>
+            <div class="record-status" id="recordStatus">Click to start recording</div>
+
+            <button class="record-btn ready" id="recordBtn">START</button>
+
+            <audio id="audioPlayer" controls style="display:none; margin-top: 20px; width: 100%;"></audio>
+
+            <div class="metrics-row" id="metricsRow" style="display:none;">
+                <div class="metric">
+                    <div class="metric-value" id="metricDuration">--</div>
+                    <div class="metric-label">Duration</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="metricWords">--</div>
+                    <div class="metric-label">Words</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="metricWPM">--</div>
+                    <div class="metric-label">WPM</div>
+                </div>
+            </div>
+
+            <div class="transcript-box" id="transcriptBox">
+                <h4>Your Answer:</h4>
+                <p class="transcript-text" id="transcriptText"></p>
+            </div>
+
+            <div class="practice-controls" id="practiceControls" style="display:none;">
+                <button class="play-btn" onclick="document.getElementById('audioPlayer').play()">Play</button>
+                <button class="next-btn" onclick="resetPractice(); nextCard();">Next Question</button>
+            </div>
+
+            <div class="star-reminder">
+                <div class="star-item">
+                    <div class="star-letter">S</div>
+                    <div class="star-label-item">Situation</div>
+                </div>
+                <div class="star-item">
+                    <div class="star-letter">T</div>
+                    <div class="star-label-item">Task</div>
+                </div>
+                <div class="star-item">
+                    <div class="star-letter">A</div>
+                    <div class="star-label-item">Action</div>
+                </div>
+                <div class="star-item">
+                    <div class="star-letter">R</div>
+                    <div class="star-label-item">Result</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Question List -->
+        <div class="list-section">
+            <h2>Interview Questions (click to jump)</h2>
+            <div id="question-list"></div>
+
+            <div class="vocab-section">
+                <h3>Key Vocabulary</h3>
+                <div class="vocab-grid" id="vocab-grid"></div>
+            </div>
+        </div>
+
+        <div class="keyboard-hint">
+            <kbd>Space</kbd> flip card &nbsp; <kbd>&#8592;</kbd> previous &nbsp; <kbd>&#8594;</kbd> next &nbsp; <kbd>R</kbd> record (practice mode)
+        </div>
+
+        <div class="swipe-hint">Swipe left/right to navigate, tap card to flip</div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-nav">
+        <div class="mobile-nav-inner">
+            <button onclick="prevCard()" aria-label="Previous">&#9664;</button>
+            <span class="mobile-counter"><span id="mobile-current">1</span> / <span id="mobile-total">0</span></span>
+            <button onclick="nextCard()" aria-label="Next">&#9654;</button>
+            <button class="mobile-list-btn" onclick="openDrawer()">List</button>
+        </div>
+    </div>
+
+    <!-- Question List Drawer (Mobile) -->
+    <div class="list-drawer" id="listDrawer" onclick="closeDrawerOnBackdrop(event)">
+        <div class="list-drawer-content" onclick="event.stopPropagation()">
+            <div class="list-drawer-header">
+                <h3>Questions</h3>
+                <button class="close-drawer" onclick="closeDrawer()">&times;</button>
+            </div>
+            <div id="mobile-question-list"></div>
+            <div class="vocab-section" style="margin-top: 15px;">
+                <h3>Key Vocabulary</h3>
+                <div class="vocab-grid" id="mobile-vocab-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===============================
+        // JOB MANIFEST (from jobs.json)
+        // ===============================
+        const jobs = {
+            active: [
+                {
+                    id: "micro1-human-data-manager",
+                    company: "micro1",
+                    role: "Human Data Manager",
+                    pay: "$45-75/hr USD",
+                    deadline: "2026-01-07T16:41:00",
+                    status: "applied",
+                    notes: "AI interview required (~54 min)"
+                },
+                {
+                    id: "micro1-writer-editor",
+                    company: "micro1",
+                    role: "Writer/Editor - AI Trainer",
+                    pay: "$50-150/hr USD",
+                    deadline: null,
+                    status: "applied",
+                    notes: "AI interview required"
+                },
+                {
+                    id: "micro1-native-english",
+                    company: "micro1",
+                    role: "English Native Speakers - AI Trainer",
+                    pay: "$40-90/hr USD",
+                    deadline: null,
+                    status: "applied",
+                    notes: "AI interview required"
+                }
+            ],
+            archived: []
+        };
+
+        // ===============================
+        // DECK DATA (embedded from JSON files)
+        // ===============================
+        const decks = {
+            "micro1-human-data-manager": {
+                meta: {
+                    job_id: "micro1-human-data-manager",
+                    company: "micro1",
+                    role: "Human Data Manager",
+                    keywords: ["data annotation", "KPIs", "IAA", "Cohen's Kappa", "throughput", "quality assurance", "process optimization"]
+                },
+                vocabulary: [
+                    {term: "IAA", definition: "Inter-Annotator Agreement"},
+                    {term: "Cohen's Kappa", definition: "Agreement metric (0-1)"},
+                    {term: "F1 Score", definition: "Precision + Recall balance"},
+                    {term: "Gold Standard", definition: "Perfect reference dataset"},
+                    {term: "Pre-labeling", definition: "AI first pass, humans refine"},
+                    {term: "First-pass Yield", definition: "% correct without rework"},
+                    {term: "RLHF", definition: "Learning from Human Feedback"},
+                    {term: "Throughput", definition: "Tasks per time unit"}
+                ],
+                questions: [
+                    {
+                        category: "Data Management",
+                        question: "Describe how you would design a data workflow for annotation tasks.",
+                        termHeader: "What Is a Data Workflow?",
+                        terminology: "The sequence: Collection -> Assignment -> Annotation -> QA Review -> Delivery. Each step has quality gates. Think of it like a factory assembly line for labeling data.",
+                        plainEnglish: "Can you think systematically about how data moves through a process? They want to see you break down a complex operation into clear stages.",
+                        dontSay: "'I would make sure it's accurate.' Too vague. Show the actual stages and quality checkpoints.",
+                        starAnswer: {
+                            S: "At the Grievance Authority, I managed 14 analysts processing 400+ cases annually - essentially a document workflow operation.",
+                            T: "Design an efficient flow that maintained Federal Court-level quality standards.",
+                            A: "Created 5-stage pipeline: Intake -> Assignment (skill-matched) -> Analysis -> QA Review -> Final Approval. Built tracking dashboard, documented each stage's criteria.",
+                            R: "Cut processing time 80% (15 days to 3 days) while maintaining quality. Same systematic approach applies to annotation workflows."
+                        }
+                    },
+                    {
+                        category: "Data Management",
+                        question: "Tell me about a time you identified a bottleneck in a process.",
+                        termHeader: "What Is a Bottleneck?",
+                        terminology: "A stage where work backs up because capacity is lower than demand. In annotation: could be unclear guidelines, slow QA review, or tool limitations slowing throughput.",
+                        plainEnglish: "Can you spot where things get stuck and fix it? They want someone who proactively improves operations, not just follows instructions.",
+                        dontSay: "'We had delays so I worked harder.' That's not identifying the bottleneck - that's treating symptoms.",
+                        starAnswer: {
+                            S: "Grievance analysts were spending 40% of time on research that should take 10%.",
+                            T: "Figure out why research was taking so long and fix it.",
+                            A: "Shadowed analysts, found they were re-researching the same policy questions repeatedly. Created searchable precedent database with common scenarios.",
+                            R: "Research phase dropped from 40% to 15% of case time. Throughput increased without adding headcount."
+                        }
+                    },
+                    {
+                        category: "Data Management",
+                        question: "How would you balance speed vs quality in data operations?",
+                        termHeader: "Speed vs Quality Tradeoff",
+                        terminology: "The tension between throughput (volume processed) and accuracy. In annotation, rushing causes errors that compound in model training. But perfectionism kills productivity.",
+                        plainEnglish: "Do you understand that both matter? They don't want someone who sacrifices quality for speed OR someone who's too slow to be practical.",
+                        dontSay: "'Quality always comes first.' Too simplistic. Show you understand context-dependent tradeoffs.",
+                        starAnswer: {
+                            S: "At Crimson PulpFic, we had publication deadlines but couldn't ship error-filled books.",
+                            T: "Find the right quality bar that was achievable within timelines.",
+                            A: "Defined 'good enough' criteria: zero factual errors, consistent character names, but minor style preferences could slide. Built tiered review - quick pass for everything, deep edit for flagged issues.",
+                            R: "Published 10 books on schedule with zero reader-reported continuity errors. Quality where it mattered, efficiency where it didn't."
+                        }
+                    },
+                    {
+                        category: "KPI Development",
+                        question: "What KPIs would you establish to measure annotation quality?",
+                        termHeader: "Annotation Quality KPIs",
+                        terminology: "Key metrics: Accuracy Rate (vs ground truth), IAA (annotator agreement), Precision/Recall/F1 (error types), First-pass Yield (% correct without rework), Throughput (volume/time).",
+                        plainEnglish: "Do you know what to measure and why? They want someone who thinks in metrics, not just feelings about 'good work.'",
+                        dontSay: "'I'd track errors.' Too generic. Name specific metrics and explain what each tells you.",
+                        starAnswer: {
+                            S: "Managing the grievance analyst team, I needed to know who was producing quality work and who needed coaching.",
+                            T: "Design metrics that identified performance issues before they became problems.",
+                            A: "Tracked: decision accuracy (vs appeal outcomes), turnaround time, revision rate (how often QA sent back). Created dashboard showing trends over time.",
+                            R: "Identified struggling analysts early, reduced revision rate from 30% to 8%. Same framework translates to annotation: accuracy, consistency, throughput."
+                        }
+                    },
+                    {
+                        category: "KPI Development",
+                        question: "How do you use metrics to drive improvement?",
+                        termHeader: "Metrics-Driven Improvement",
+                        terminology: "Using data to identify problems, test solutions, and verify results. The cycle: Measure -> Analyze -> Intervene -> Measure again. Avoid vanity metrics that don't drive action.",
+                        plainEnglish: "Do you actually DO something with metrics, or just report them? They want action, not dashboards that nobody reads.",
+                        dontSay: "'I review metrics regularly.' So what? Show how metrics led to specific changes.",
+                        starAnswer: {
+                            S: "Noticed our grievance case turnaround metric was degrading - 15 days average creeping toward 20.",
+                            T: "Identify the cause and fix it using the data.",
+                            A: "Segmented by case type, analyst, stage. Found complex cases (15% of volume) were causing 60% of delays. Created specialist track for complex cases with dedicated resources.",
+                            R: "Average dropped back to 12 days. Complex cases still took longer but didn't block the queue. Metrics told us WHERE to focus."
+                        }
+                    },
+                    {
+                        category: "KPI Development",
+                        question: "Explain the difference between precision and recall in data quality.",
+                        termHeader: "Precision vs Recall",
+                        terminology: "Precision: Of what we labeled positive, how many actually are? (avoid false positives). Recall: Of all actual positives, how many did we catch? (avoid false negatives). F1 balances both.",
+                        plainEnglish: "Do you understand error types? In annotation, these matter differently depending on use case - medical diagnosis needs high recall, spam filtering needs high precision.",
+                        dontSay: "Vague explanation without examples. They want to see you can apply these concepts practically.",
+                        starAnswer: {
+                            S: "Building medictate.ai, we faced this tradeoff with medical term recognition.",
+                            T: "Decide which error type was more costly - missing a term (low recall) or flagging non-terms (low precision).",
+                            A: "For medical dictation, missing a term is dangerous - could affect patient care. Tuned for high recall (catch everything), accepted lower precision (some false positives that humans could easily dismiss).",
+                            R: "94% accuracy on medical terms. Understood that in healthcare context, recall matters more than precision. Different contexts require different tradeoffs."
+                        }
+                    },
+                    {
+                        category: "Cross-Functional",
+                        question: "Describe a time you worked with a team from a different department to achieve a goal.",
+                        termHeader: "Cross-Functional Work",
+                        terminology: "Collaborating across different teams/skills - in AI, this often means annotators + engineers + domain experts + product. Different priorities, vocabularies, constraints.",
+                        plainEnglish: "Can you work with people who don't think like you? Different backgrounds, different priorities. Show you can bridge gaps.",
+                        dontSay: "'I'm a team player.' Everyone says that. Give a specific story with specific challenges.",
+                        starAnswer: {
+                            S: "At UN peacekeeping (UNDOF), I led a platoon with personnel from Slovakia, Poland, Austria, and Canada - different languages, military cultures, procedures.",
+                            T: "Coordinate daily operations across 18 nations with no common operating procedures.",
+                            A: "Created visual standard operating procedures, established common terminology, held daily briefings with translation support, focused on intent not literal instructions.",
+                            R: "Zero safety incidents across my rotation. Different backgrounds became an asset - each brought unique problem-solving approaches. Same principle: diverse teams need clear communication frameworks."
+                        }
+                    },
+                    {
+                        category: "Cross-Functional",
+                        question: "How do you handle conflicting priorities between teams?",
+                        termHeader: "Priority Conflicts",
+                        terminology: "When different teams want different things from the same resource. Engineering wants fast iteration, QA wants thorough review, Product wants new features. Someone has to prioritize.",
+                        plainEnglish: "When two valid priorities clash, what do you do? They want to see you can navigate politics without either bulldozing or being a pushover.",
+                        dontSay: "'I try to make everyone happy.' That usually means nobody's happy. Show you can make hard calls.",
+                        starAnswer: {
+                            S: "At Grievance Authority, legal counsel wanted thorough analysis, chain of command wanted fast decisions. Both had valid reasons.",
+                            T: "Find a solution that addressed both concerns without compromising either.",
+                            A: "Proposed tiered system: straightforward cases got streamlined review (fast), complex cases got full analysis (thorough). Clear criteria for which track.",
+                            R: "80% of cases moved through fast track, complex cases got proper attention. Both stakeholders agreed the tradeoff made sense. Key was making the tradeoff explicit, not pretending it didn't exist."
+                        }
+                    },
+                    {
+                        category: "Cross-Functional",
+                        question: "Tell me about influencing a decision when you didn't have direct authority.",
+                        termHeader: "Influence Without Authority",
+                        terminology: "Getting things done when you can't just order people. Common in matrix organizations and cross-functional teams. Requires building credibility, understanding others' incentives.",
+                        plainEnglish: "Can you lead when you're not the boss? In data operations, you'll need engineers, domain experts, and annotators to cooperate - but they don't report to you.",
+                        dontSay: "'I escalated to management.' That's avoiding the problem, not solving it. Show you can influence directly.",
+                        starAnswer: {
+                            S: "Needed IT to prioritize our case management system upgrade, but we weren't their highest priority client.",
+                            T: "Get the upgrade without authority over IT resources.",
+                            A: "Documented how current system was causing rework - translated our pain into their metrics (support tickets, manual workarounds). Offered to help write requirements so their job was easier.",
+                            R: "Got bumped up the queue. Key insight: speak their language, show how helping you helps them. Same principle applies to cross-functional collaboration anywhere."
+                        }
+                    },
+                    {
+                        category: "Constructive Feedback",
+                        question: "Tell me about a time you received difficult feedback. How did you respond?",
+                        termHeader: "Receiving Feedback",
+                        terminology: "How you handle criticism professionally. Tests self-awareness, emotional intelligence, and growth mindset. They want to see you can improve, not just defend.",
+                        plainEnglish: "Can you take criticism without getting defensive? Show you learned something and changed behavior.",
+                        dontSay: "'I welcomed the feedback.' Too easy. Show a real moment where feedback was hard to hear.",
+                        starAnswer: {
+                            S: "Early in grievance work, senior analyst told me my decision letters were 'too academic' - members couldn't understand them.",
+                            T: "Decide whether the feedback was valid and what to do about it.",
+                            A: "My first instinct was defensive - I had a Master's degree, of course I write well. But I re-read my letters imagining I was the grievor. She was right. Rewrote using plain language, tested with non-lawyers.",
+                            R: "Complaint rate on letter clarity dropped significantly. That feedback made me better - but only because I listened instead of defending."
+                        }
+                    },
+                    {
+                        category: "Constructive Feedback",
+                        question: "Describe giving constructive criticism to someone who wasn't meeting expectations.",
+                        termHeader: "Giving Feedback",
+                        terminology: "Delivering criticism that's specific, actionable, and focused on behavior not person. In annotation management, you'll need to coach underperformers without destroying morale.",
+                        plainEnglish: "Can you tell someone they're doing something wrong without making them hate you? Show you can be direct AND respectful.",
+                        dontSay: "'I'm always diplomatic.' Show a real conversation with real tension, not a sanitized version.",
+                        starAnswer: {
+                            S: "Had an analyst whose work was technically correct but took twice as long as peers.",
+                            T: "Address the productivity issue without demotivating someone who was trying hard.",
+                            A: "Private conversation, started with what was working (accuracy was excellent). Then: 'I've noticed your cases take longer than average. Walk me through your process.' Found she was over-researching out of anxiety about mistakes.",
+                            R: "Gave her permission to 'move on when good enough' and set explicit time limits. Productivity improved 40%, quality stayed high. The issue was confidence, not capability - direct feedback surfaced the real problem."
+                        }
+                    },
+                    {
+                        category: "Constructive Feedback",
+                        question: "How do you ensure feedback is understood and acted upon?",
+                        termHeader: "Feedback Follow-Through",
+                        terminology: "Feedback without follow-up is wasted. Includes checking understanding, setting expectations for change, and verifying improvement. The loop: Give feedback -> Verify understanding -> Set timeline -> Check back.",
+                        plainEnglish: "Do people actually change after you give feedback, or does nothing happen? Show you close the loop.",
+                        dontSay: "'I document everything.' Documentation doesn't create change. Show the human follow-through.",
+                        starAnswer: {
+                            S: "Trained 120+ Harassment Advisors - couldn't assume one conversation created lasting change.",
+                            T: "Ensure feedback from training actually stuck when advisors returned to their units.",
+                            A: "Built follow-up system: immediate knowledge check, 30-day scenario exercise, 90-day case review. Created peer network so advisors could support each other after training.",
+                            R: "Retention rate (measured by follow-up assessments) went from 60% to 85%. Feedback without structure disappears - you need systems to make change stick."
+                        }
+                    },
+                    {
+                        category: "Opening",
+                        question: "Tell me about yourself.",
+                        termHeader: "The Opening Pitch",
+                        terminology: "Not your life story - a 60-90 second positioning statement. Connect your background to THIS role. Show you understand what they need and why you're the fit.",
+                        plainEnglish: "Why should we keep talking? Hook them with relevance to the Human Data Manager role. Operations + AI + quality management.",
+                        dontSay: "'I've always been interested in...' or starting with childhood. Start with what matters to THEM.",
+                        starAnswer: {
+                            S: "I'm an AI consultant and operations leader with 15+ years managing complex document workflows.",
+                            T: "Show why my background is perfect for Human Data Manager.",
+                            A: "Most recently led 14 analysts processing 400+ cases annually - essentially a human data operation with Federal Court-level quality standards. Built my own AI tools using Claude Code, so I understand both the human and technical sides.",
+                            R: "I'm looking for a role where I can apply process optimization and quality management experience to scale AI training data operations."
+                        }
+                    }
+                ]
+            },
+
+            "micro1-writer-editor": {
+                meta: {
+                    job_id: "micro1-writer-editor",
+                    company: "micro1",
+                    role: "Writer/Editor - AI Trainer",
+                    keywords: ["editing", "proofreading", "AI content evaluation", "style guide", "grammar", "clarity", "consistency", "quality assurance"]
+                },
+                vocabulary: [
+                    {term: "Style Guide", definition: "Rules for consistent writing (tone, formatting, voice)"},
+                    {term: "Line Editing", definition: "Sentence-level clarity and flow"},
+                    {term: "Copyediting", definition: "Grammar, spelling, punctuation"},
+                    {term: "Developmental Edit", definition: "Structure and content organization"},
+                    {term: "Voice", definition: "Consistent personality in writing"},
+                    {term: "Tone", definition: "Emotional quality (formal, casual, etc.)"},
+                    {term: "AI Hallucination", definition: "When AI generates false information confidently"},
+                    {term: "Prompt Engineering", definition: "Crafting inputs to get desired AI outputs"}
+                ],
+                questions: [
+                    {
+                        category: "Writing & Editing",
+                        question: "Describe your editing process when reviewing a piece of content.",
+                        termHeader: "What Is an Editing Process?",
+                        terminology: "The systematic approach to reviewing content: typically multiple passes - developmental (structure), line editing (flow), copyediting (grammar), proofreading (typos). Each pass has a different focus.",
+                        plainEnglish: "Do you have a method, or do you just 'read it and fix stuff'? They want to see you're systematic, not random.",
+                        dontSay: "'I read it carefully and make corrections.' Too vague. Show the actual stages and what you look for at each.",
+                        starAnswer: {
+                            S: "At Crimson PulpFic, I edit manuscripts from 7 different authors with varying skill levels.",
+                            T: "Maintain consistent quality across all publications while meeting publishing deadlines.",
+                            A: "Created 3-pass system: First pass for structure and plot holes, second for voice consistency and flow, third for grammar and formatting. Used style guide checklist for each pass.",
+                            R: "Published 10 books with zero reader-reported continuity errors. Systematic approach catches what random reading misses."
+                        }
+                    },
+                    {
+                        category: "Writing & Editing",
+                        question: "How do you maintain consistency when editing across multiple documents or authors?",
+                        termHeader: "Editorial Consistency",
+                        terminology: "Ensuring uniform style, tone, terminology, and formatting across content - regardless of who wrote it. Requires style guides, term glossaries, and systematic checking.",
+                        plainEnglish: "Can you make different people's writing feel like it came from one source? This is crucial for AI training data consistency.",
+                        dontSay: "'I'm good at noticing inconsistencies.' HOW do you notice them? What's your system?",
+                        starAnswer: {
+                            S: "Managing 7 authors at Crimson PulpFic, each with distinct writing styles, across 3 interconnected series.",
+                            T: "Make all content feel cohesive despite different authors.",
+                            A: "Built master style guide with character voice templates, terminology dictionaries, and formatting standards. Created pre-publication checklist. Each manuscript gets compared against the guide before approval.",
+                            R: "Readers can't tell which author wrote which book in the series. Consistency maintained across 50+ books published."
+                        }
+                    },
+                    {
+                        category: "Writing & Editing",
+                        question: "Tell me about a time you had to give critical feedback on someone's writing.",
+                        termHeader: "Editorial Feedback",
+                        terminology: "Providing constructive criticism that improves the work without demoralizing the writer. Balance honesty with encouragement. Focus on the writing, not the writer.",
+                        plainEnglish: "Can you tell someone their work needs improvement without making them defensive? Essential skill for AI training where you're constantly evaluating content.",
+                        dontSay: "'I'm always diplomatic.' Show a real situation where the feedback was genuinely hard to give.",
+                        starAnswer: {
+                            S: "Author submitted manuscript with major structural problems - story didn't make sense in places.",
+                            T: "Get them to rewrite significant portions without losing their motivation.",
+                            A: "Started with what worked well (character voice was strong). Then framed structural issues as 'reader confusion points' with specific examples. Offered concrete solutions, not just problems. Gave them ownership of the fix.",
+                            R: "Author rewrote 40% of manuscript and thanked me for the feedback. Book became one of our better sellers. Key: make feedback about the reader experience, not 'you did this wrong.'"
+                        }
+                    },
+                    {
+                        category: "AI Content Evaluation",
+                        question: "How would you evaluate AI-generated content for quality?",
+                        termHeader: "AI Content Evaluation",
+                        terminology: "Assessing AI outputs for: factual accuracy, coherence, tone appropriateness, hallucinations (false info), relevance to prompt, and stylistic quality. Different from human editing - you're also training the system.",
+                        plainEnglish: "Do you understand what makes AI content good vs bad? They need people who can systematically evaluate and improve AI outputs.",
+                        dontSay: "'I'd check if it's accurate and well-written.' Too vague. What SPECIFICALLY do you look for?",
+                        starAnswer: {
+                            S: "Building medictate.ai, I reviewed thousands of AI-generated medical transcriptions.",
+                            T: "Develop systematic evaluation criteria for AI medical documentation.",
+                            A: "Created rubric: factual accuracy (vs source audio), medical terminology correctness, appropriate abbreviations, logical flow, and critical safety items (medications, dosages). Flagged patterns of AI errors to improve the model.",
+                            R: "Achieved 94% accuracy rate. The systematic approach meant I could train others to evaluate consistently. Same framework applies to any AI content evaluation."
+                        }
+                    },
+                    {
+                        category: "AI Content Evaluation",
+                        question: "What would you do if you spotted a pattern of errors in AI outputs?",
+                        termHeader: "Pattern Recognition in AI",
+                        terminology: "Identifying systematic errors (not random mistakes) in AI outputs - like consistently mishandling certain phrases, topics, or formats. Pattern recognition is more valuable than fixing individual errors.",
+                        plainEnglish: "Can you see the forest, not just the trees? One-off fixes are less valuable than identifying WHY errors happen repeatedly.",
+                        dontSay: "'I'd correct each error.' That's the baseline. Show you think about root causes.",
+                        starAnswer: {
+                            S: "Noticed medictate.ai consistently struggled with Northern Irish medical terminology and spellings.",
+                            T: "Fix not just individual errors but the underlying pattern.",
+                            A: "Documented the pattern with 20+ examples. Identified it was a training data gap - system was US-English biased. Created supplementary dataset of UK/Irish medical terms. Fed corrections back to improve the model.",
+                            R: "UK/Irish accuracy improved from 78% to 91%. One pattern fix was worth more than hundreds of individual corrections. Same principle applies to any AI training work."
+                        }
+                    },
+                    {
+                        category: "AI Content Evaluation",
+                        question: "How do you handle ambiguous content where there's no clear 'right' answer?",
+                        termHeader: "Handling Ambiguity",
+                        terminology: "In AI evaluation, many judgments aren't black/white. Tone could be 'slightly formal' or 'neutral.' You need consistent decision frameworks for gray areas - not just personal preference.",
+                        plainEnglish: "Can you make consistent decisions when the guidelines don't cover everything? AI training is full of judgment calls.",
+                        dontSay: "'I use my best judgment.' Everyone says that. Show your framework for judgment calls.",
+                        starAnswer: {
+                            S: "Grievance analysis constantly required judgment on ambiguous policy interpretations.",
+                            T: "Make defensible decisions when the regulations didn't give clear answers.",
+                            A: "Developed decision framework: (1) What does the plain language say? (2) What's the policy intent? (3) What did similar cases decide? (4) What's fair to the member? Documented reasoning for every gray-area call.",
+                            R: "My decisions were rarely overturned on review. The framework made ambiguous calls consistent and defensible. Same approach works for AI content evaluation - document your reasoning, not just your conclusion."
+                        }
+                    },
+                    {
+                        category: "Style & Quality",
+                        question: "How do you ensure your work adheres to style guidelines?",
+                        termHeader: "Style Guide Adherence",
+                        terminology: "Following established rules for tone, formatting, terminology, and voice. In AI training, consistency is critical - the AI learns from your decisions, so inconsistent adherence trains inconsistent models.",
+                        plainEnglish: "Can you follow rules even when you might personally prefer something different? AI training requires putting guidelines above personal style preferences.",
+                        dontSay: "'I'm very detail-oriented.' Show your actual process for checking compliance.",
+                        starAnswer: {
+                            S: "Military writing has extremely rigid style requirements - every format element matters for official documents.",
+                            T: "Produce documents that met Federal Court standards with zero formatting errors.",
+                            A: "Created personal checklists mapped to style guide requirements. Never submitted without running the checklist. Kept style guide open while writing, not just during review. Built templates that enforced formatting automatically.",
+                            R: "Zero rejected documents for formatting issues across 400+ case files. Checklist approach is slower but prevents errors that waste everyone's time."
+                        }
+                    },
+                    {
+                        category: "Style & Quality",
+                        question: "Describe a situation where you had to balance speed with quality.",
+                        termHeader: "Speed vs Quality",
+                        terminology: "The constant tension between volume and accuracy. In AI training, throughput matters but errors compound - training an AI on bad data makes it worse. Finding the right balance is role-dependent.",
+                        plainEnglish: "They want to know you won't sacrifice quality for speed, but also won't be so slow you're unproductive.",
+                        dontSay: "'Quality always comes first.' Too simplistic. Show you understand context-dependent tradeoffs.",
+                        starAnswer: {
+                            S: "Crimson PulpFic had publishing deadlines but couldn't ship error-filled books.",
+                            T: "Find the right quality bar that was achievable within timelines.",
+                            A: "Defined 'good enough' criteria: zero factual errors, consistent character names, but minor style preferences could slide. Built tiered review - quick pass for everything, deep edit for flagged issues only.",
+                            R: "Published 10 books on schedule with zero reader-reported errors. Quality where it matters, efficiency where it doesn't. Same principle for AI training - know which errors are critical."
+                        }
+                    },
+                    {
+                        category: "Process & Methodology",
+                        question: "How do you prioritize when you have multiple tasks with competing deadlines?",
+                        termHeader: "Task Prioritization",
+                        terminology: "Deciding what to work on when everything seems urgent. Consider: actual deadlines, dependencies (what's blocking others), effort required, and impact of delay.",
+                        plainEnglish: "Can you manage your own workload effectively? Remote AI training work requires self-management without constant supervision.",
+                        dontSay: "'I'm good at multitasking.' Multitasking usually means doing everything poorly. Show your actual prioritization method.",
+                        starAnswer: {
+                            S: "Managing 14 analysts' work while handling my own complex cases and responding to urgent requests from senior leadership.",
+                            T: "Get everything done without anything critical falling through cracks.",
+                            A: "Used impact/urgency matrix: urgent + high-impact first, then scheduled high-impact non-urgent items, batched low-impact tasks. Started each day with 'what will hurt most if it's not done today?' Always over-communicated if timelines were at risk.",
+                            R: "Never missed a critical deadline. Team learned to flag true urgencies vs 'nice to haves.' Same framework works for managing multiple AI training projects."
+                        }
+                    },
+                    {
+                        category: "Process & Methodology",
+                        question: "Tell me about a time you improved a process.",
+                        termHeader: "Process Improvement",
+                        terminology: "Identifying inefficiencies and implementing better methods. In AI training, this could be annotation workflows, quality checks, or documentation practices. Shows you don't just follow processes - you improve them.",
+                        plainEnglish: "Do you just do the work, or do you make the work better? They want people who proactively improve operations.",
+                        dontSay: "'I suggested some improvements.' What were they? What happened? Give specifics.",
+                        starAnswer: {
+                            S: "Grievance analysts were spending 40% of time on research that should take 10%.",
+                            T: "Figure out why and fix it without adding headcount.",
+                            A: "Shadowed analysts, found they were re-researching the same policy questions repeatedly. Created searchable precedent database with common scenarios and rulings. Documented in format analysts could quickly scan.",
+                            R: "Research phase dropped from 40% to 15% of case time. Throughput increased without sacrificing quality. Same approach - identify repeat work, create reusable resources."
+                        }
+                    },
+                    {
+                        category: "Opening",
+                        question: "Tell me about yourself.",
+                        termHeader: "The Opening Pitch",
+                        terminology: "Not your life story - a 60-90 second positioning statement. Connect your background to THIS role. Show you understand what they need and why you're the fit.",
+                        plainEnglish: "Why should we keep talking? Hook them with relevance to Writer/Editor AI Trainer role.",
+                        dontSay: "'I've always been interested in...' or starting with childhood. Start with what matters to THEM.",
+                        starAnswer: {
+                            S: "I'm a published author and editor with 10 books on Amazon and experience evaluating AI-generated content.",
+                            T: "Show why my background is perfect for Writer/Editor AI Trainer.",
+                            A: "Run Crimson PulpFic where I edit manuscripts from 7 authors, maintaining quality and consistency across 50+ publications. Also built medictate.ai - spent 14 months evaluating and improving AI outputs for medical documentation.",
+                            R: "I combine professional editing experience with hands-on AI training work. I know what good writing looks like AND how to systematically improve AI outputs."
+                        }
+                    },
+                    {
+                        category: "Motivation",
+                        question: "Why are you interested in AI training work?",
+                        termHeader: "Motivation Question",
+                        terminology: "They want to know if you understand what the work actually is and if you'll find it engaging long-term. AI training can be repetitive - they need people who find the mission compelling.",
+                        plainEnglish: "Will you stick around, or bail when you realize the work is repetitive? Show genuine interest in the impact, not just the paycheck.",
+                        dontSay: "'I'm passionate about AI.' Everyone says that. What specifically draws you to this work?",
+                        starAnswer: {
+                            S: "I've been teaching AI to write better since building medictate.ai for medical dictation.",
+                            T: "Explain why AI training genuinely interests me.",
+                            A: "The feedback loop is addicting - you see your corrections improve the model. It's like editing, but your edits make the writer permanently better. I also taught GenAI courses at U-Go, so I understand both sides - training AI and teaching humans to use it.",
+                            R: "I'm not discovering AI training - I've been doing it. micro1 lets me do it at scale with a team, rather than solo on my own projects."
+                        }
+                    }
+                ]
+            },
+
+            "micro1-native-english": {
+                meta: {
+                    job_id: "micro1-native-english",
+                    company: "micro1",
+                    role: "English Native Speakers - AI Trainer",
+                    keywords: ["native English", "language evaluation", "AI training", "data annotation", "quality feedback", "linguistic analysis", "cultural context", "idioms"]
+                },
+                vocabulary: [
+                    {term: "Native Proficiency", definition: "Language skill equivalent to someone raised speaking it"},
+                    {term: "Linguistic Analysis", definition: "Breaking down language structure, meaning, usage"},
+                    {term: "Data Annotation", definition: "Labeling data to train AI models"},
+                    {term: "RLHF", definition: "Reinforcement Learning from Human Feedback"},
+                    {term: "Idiom", definition: "Phrase with meaning different from literal words"},
+                    {term: "Register", definition: "Language formality level (casual, formal, technical)"},
+                    {term: "Pragmatics", definition: "How context affects meaning"},
+                    {term: "Collocation", definition: "Words that naturally go together (make a decision, not do a decision)"}
+                ],
+                questions: [
+                    {
+                        category: "Language Expertise",
+                        question: "How do you identify whether AI-generated text sounds natural to a native speaker?",
+                        termHeader: "Natural Language Detection",
+                        terminology: "Native speakers intuitively catch awkward phrasing, unusual word choices, and unnatural flow that non-natives might miss. It's about collocations (word pairings), register (formality), and pragmatics (contextual meaning).",
+                        plainEnglish: "Can you spot when AI writes something that's technically correct but sounds 'off'? This is your core value as a native speaker.",
+                        dontSay: "'It just sounds wrong.' You need to articulate WHY it sounds wrong - that's what trains the AI.",
+                        starAnswer: {
+                            S: "Editing manuscripts at Crimson PulpFic, I constantly flag AI-assisted drafts that sound 'almost right.'",
+                            T: "Articulate why certain phrases sound unnatural, not just that they do.",
+                            A: "Developed categories: wrong collocations ('do a decision' vs 'make a decision'), unnatural rhythm (too many similar sentence lengths), register mismatch (overly formal in casual dialogue), and missing idioms where a native would use them.",
+                            R: "Can now explain WHY something sounds off, which is trainable feedback. 'Sounds weird' doesn't help AI improve. 'Wrong collocation - native speakers say make a decision' does."
+                        }
+                    },
+                    {
+                        category: "Language Expertise",
+                        question: "Give an example of a nuance in English that AI often gets wrong.",
+                        termHeader: "Language Nuance",
+                        terminology: "Subtle distinctions in meaning, tone, or usage that require native intuition. Examples: sarcasm, understatement, regional expressions, cultural references, implicit meaning.",
+                        plainEnglish: "Can you identify the subtle stuff that makes language feel authentic? This is where native speakers add real value to AI training.",
+                        dontSay: "'AI struggles with sarcasm.' Too generic. Give a specific, detailed example you've actually encountered.",
+                        starAnswer: {
+                            S: "Working with medictate.ai, noticed AI struggled with Canadian/British medical terminology vs American defaults.",
+                            T: "Identify specific patterns of nuance failure.",
+                            A: "Documented examples: 'theatre' vs 'OR', 'casualty' vs 'ER', 'paracetamol' vs 'acetaminophen.' Also caught social nuances - Canadian doctors use softer language ('we might consider' vs 'you should'), which AI defaulted to more direct American phrasing.",
+                            R: "Built supplementary training data for regional medical English. The nuance wasn't wrong grammar - it was wrong register for the context. Native speakers catch this; grammar checkers don't."
+                        }
+                    },
+                    {
+                        category: "Language Expertise",
+                        question: "How would you explain the difference between two similar words to train an AI?",
+                        termHeader: "Semantic Distinction",
+                        terminology: "Words with similar meanings but different usage contexts, connotations, or collocations. Example: 'big' vs 'large' - technically synonyms but not always interchangeable.",
+                        plainEnglish: "Can you break down subtle word differences in a way that's systematic, not just 'it feels different'?",
+                        dontSay: "'They mean the same thing but are used differently.' That's restating the question. Show how you'd structure the explanation.",
+                        starAnswer: {
+                            S: "Teaching AI applications at U-Go, students asked why AI sometimes picks 'weird' synonyms.",
+                            T: "Explain synonym selection in a systematic way that could train better word choice.",
+                            A: "Created framework: (1) Formality level - 'commence' vs 'start' vs 'begin'. (2) Connotation - 'stubborn' (negative) vs 'persistent' (positive). (3) Collocation - 'heavy rain' not 'big rain'. (4) Register match - technical, casual, formal. Gave examples from real AI outputs.",
+                            R: "Students could then articulate why word choices felt wrong. Same framework works for AI training - you need structured categories, not just 'this sounds better.'"
+                        }
+                    },
+                    {
+                        category: "AI Training",
+                        question: "Describe your approach to evaluating AI-generated responses.",
+                        termHeader: "AI Evaluation Methodology",
+                        terminology: "Systematic assessment of AI outputs across multiple dimensions: accuracy, relevance, coherence, tone, helpfulness, safety. Different evaluation criteria for different use cases.",
+                        plainEnglish: "Do you have a method, or do you just read it and decide if it's good? They need systematic evaluators, not random opinions.",
+                        dontSay: "'I check if it's accurate and well-written.' What's your actual rubric? What do you check first, second, third?",
+                        starAnswer: {
+                            S: "Evaluating medictate.ai outputs for medical documentation accuracy.",
+                            T: "Create systematic evaluation that others could replicate consistently.",
+                            A: "Built rubric: (1) Factual accuracy vs source audio. (2) Medical terminology correctness. (3) Appropriate format and structure. (4) Safety-critical items (meds, dosages, allergies). (5) Natural language flow. Weighted safety items highest - a well-written but medically wrong note is dangerous.",
+                            R: "Achieved 94% accuracy with systematic approach. Could train other evaluators to get consistent results. Same framework adapts to any AI evaluation - define criteria, weight them, apply consistently."
+                        }
+                    },
+                    {
+                        category: "AI Training",
+                        question: "How do you handle cases where you disagree with the evaluation guidelines?",
+                        termHeader: "Guideline Compliance",
+                        terminology: "AI training requires consistent application of guidelines, even when you personally disagree. Your job is to apply the standard, not create your own. Disagreements go through proper channels.",
+                        plainEnglish: "Can you follow rules you don't personally agree with? AI training consistency is more important than individual judgment.",
+                        dontSay: "'I'd do what I think is right.' That undermines the entire training dataset. Show you understand why consistency matters.",
+                        starAnswer: {
+                            S: "Grievance analysis required applying policies I sometimes personally disagreed with.",
+                            T: "Apply the policy correctly while noting concerns through proper channels.",
+                            A: "Separated my job (apply the policy) from my opinion (document concerns separately). Applied guidelines as written for consistency. Wrote formal recommendations when I saw systemic issues. Never freelanced my own interpretation into official decisions.",
+                            R: "My analyses were consistent with policy, but my documented concerns actually led to policy improvements twice. You can disagree AND comply - just through the right channels."
+                        }
+                    },
+                    {
+                        category: "AI Training",
+                        question: "What would you do if you noticed the AI consistently making the same type of error?",
+                        termHeader: "Pattern Identification",
+                        terminology: "Recognizing systematic errors (not random mistakes) that indicate training gaps or model weaknesses. Pattern identification is more valuable than individual corrections - it improves the model itself.",
+                        plainEnglish: "Can you see patterns, not just individual problems? Finding root causes is more valuable than fixing symptoms.",
+                        dontSay: "'I'd correct each error.' That's the minimum. Show you think about WHY errors repeat.",
+                        starAnswer: {
+                            S: "Noticed medictate.ai consistently struggled with Irish/UK medical terminology.",
+                            T: "Identify the pattern and escalate for systemic fix.",
+                            A: "Documented 20+ examples with specific error types. Identified root cause - training data was US-English biased. Created supplementary dataset of UK/Irish medical terms. Submitted through proper feedback channel with evidence and proposed solution.",
+                            R: "UK/Irish accuracy improved from 78% to 91% after the training data was updated. One pattern report was worth more than hundreds of individual corrections."
+                        }
+                    },
+                    {
+                        category: "Quality & Attention",
+                        question: "How do you maintain focus and quality during repetitive tasks?",
+                        termHeader: "Sustained Attention",
+                        terminology: "AI training involves evaluating many similar items - staying alert to catch errors despite monotony. Quality can't degrade over time or with volume.",
+                        plainEnglish: "Will you still catch errors on item #500 that you would have caught on item #5? Repetitive work requires mental discipline.",
+                        dontSay: "'I'm very detail-oriented.' Everyone claims that. Show your actual strategy for maintaining quality.",
+                        starAnswer: {
+                            S: "Grievance analysis required reviewing 400+ cases per year with consistent attention to detail.",
+                            T: "Maintain Federal Court-level accuracy despite volume and repetition.",
+                            A: "Built quality protection habits: took breaks every 90 minutes, used checklists to catch what fatigue misses, saved complex cases for peak energy hours, kept error log to stay aware of my own patterns. Never assumed I was 'in the zone' - trust the checklist.",
+                            R: "Maintained consistent quality across the full caseload. The cases that went to Federal Court were from my later batches as often as early ones. Systems beat willpower for sustained attention."
+                        }
+                    },
+                    {
+                        category: "Quality & Attention",
+                        question: "Give an example of catching an error others missed.",
+                        termHeader: "Attention to Detail",
+                        terminology: "Noticing mistakes that slipped past other reviewers. Demonstrates thoroughness and different perspective. In AI training, catching what others miss is especially valuable.",
+                        plainEnglish: "Can you show you actually catch things? They want evidence of attention to detail, not just claims.",
+                        dontSay: "'I'm always thorough.' Give a specific, concrete example with stakes.",
+                        starAnswer: {
+                            S: "Reviewing a grievance case file that had already been through initial analysis.",
+                            T: "QA review before submission to senior leadership.",
+                            A: "Noticed a date discrepancy buried in attachments - the timeline the analyst constructed was off by one day, which changed whether a deadline had been met. Small error, but it would have changed the entire recommendation.",
+                            R: "Caught the error before submission. The case outcome flipped from 'member loses' to 'member wins.' A one-day date error in page 47 of exhibits. That's why you check everything, not just the obvious parts."
+                        }
+                    },
+                    {
+                        category: "Communication",
+                        question: "How do you provide feedback that helps improve AI outputs?",
+                        termHeader: "Constructive AI Feedback",
+                        terminology: "Feedback that's specific, actionable, and trainable. 'This is wrong' doesn't help. 'This is wrong because X, correct version is Y, pattern is Z' improves the model.",
+                        plainEnglish: "Do you just mark things right/wrong, or do you provide feedback that actually makes the AI better?",
+                        dontSay: "'I explain what's wrong.' HOW do you explain it? What makes feedback useful for AI training?",
+                        starAnswer: {
+                            S: "Training Harassment Advisors, realized vague feedback didn't change behavior.",
+                            T: "Develop feedback method that actually improved performance.",
+                            A: "Created feedback structure: (1) What specifically is the issue. (2) Why it's wrong (principle, not just preference). (3) What the correct version looks like. (4) Pattern to watch for going forward. Applied same structure to AI evaluation at medictate.ai.",
+                            R: "Advisors improved faster with structured feedback. Same principle works for AI training - specific, principled, actionable. 'Wrong tone' becomes 'too formal for casual context - use contractions and shorter sentences.'"
+                        }
+                    },
+                    {
+                        category: "Communication",
+                        question: "Describe working with a team remotely.",
+                        termHeader: "Remote Collaboration",
+                        terminology: "Effective communication without in-person cues. Requires clear written communication, proactive updates, timezone awareness, and self-management. AI training is typically remote work.",
+                        plainEnglish: "Can you work effectively without someone looking over your shoulder? Remote work requires self-discipline and over-communication.",
+                        dontSay: "'I've worked remotely before.' What specifically did you do to make it work? What challenges did you navigate?",
+                        starAnswer: {
+                            S: "Led a 14-analyst team during COVID transition to remote work.",
+                            T: "Maintain productivity and quality without in-person supervision.",
+                            A: "Over-communicated - daily check-ins, clear expectations in writing, documented decisions. Created shared visibility into work status. Made myself available for questions but trusted people to work independently. Focused on outcomes, not activity.",
+                            R: "Team maintained productivity through the transition. Some analysts actually improved because fewer interruptions. Key insight: remote work requires more explicit communication, not less."
+                        }
+                    },
+                    {
+                        category: "Opening",
+                        question: "Tell me about yourself.",
+                        termHeader: "The Opening Pitch",
+                        terminology: "Not your life story - a 60-90 second positioning statement connecting your background to THIS role. Hook them with relevance.",
+                        plainEnglish: "Why should we keep talking? For Native English AI Trainer, emphasize language expertise and AI experience.",
+                        dontSay: "'I've always been interested in...' Start with what matters to THEM, not your journey.",
+                        starAnswer: {
+                            S: "I'm a native English speaker, published author, and AI trainer with hands-on experience evaluating and improving AI outputs.",
+                            T: "Show why my background fits Native English AI Trainer.",
+                            A: "I've published 10 books through Crimson PulpFic - professional-level written English. Built medictate.ai where I spent 14 months training AI for medical dictation, catching the subtle language issues that non-natives miss. Also taught GenAI courses at U-Go.",
+                            R: "I combine native language intuition with systematic AI training experience. I can spot when AI sounds 'off' AND articulate why in a way that improves the model."
+                        }
+                    },
+                    {
+                        category: "Motivation",
+                        question: "Why do you want to work as an AI trainer?",
+                        termHeader: "Motivation Question",
+                        terminology: "They want to know if you understand what the work is and will find it engaging. AI training can be repetitive - they need people motivated by the mission, not just money.",
+                        plainEnglish: "Will you stick around when the novelty wears off? Show genuine interest in the impact of the work.",
+                        dontSay: "'I'm passionate about AI.' Vague and everyone says it. What specifically draws you to this work?",
+                        starAnswer: {
+                            S: "I've been training AI since building medictate.ai - 14 months of iterative improvement.",
+                            T: "Explain what genuinely interests me about AI training.",
+                            A: "The feedback loop is compelling - you see your corrections improve the model over time. It's like editing, but the writer actually gets permanently better. My language expertise becomes part of how AI communicates with millions of people. That's meaningful impact.",
+                            R: "I'm not new to AI training - I know what the work actually involves. micro1 lets me do it at scale with a team rather than solo on my own projects."
+                        }
+                    }
+                ]
+            }
+        };
+
+        // ===============================
+        // STATE
+        // ===============================
+        let currentJobId = "micro1-human-data-manager";
+        let questions = [];
+        let vocabulary = [];
+        let currentIndex = 0;
+        let isFlipped = false;
+        let currentMode = 'study';
+
+        // Recording state
+        let mediaRecorder;
+        let audioChunks = [];
+        let startTime;
+        let timerInterval;
+        let recognition;
+
+        // ===============================
+        // INITIALIZATION
+        // ===============================
+        function init() {
+            populateJobSelector();
+            loadJob(currentJobId);
+            initSpeechRecognition();
+        }
+
+        function populateJobSelector() {
+            const activeGroup = document.getElementById('activeJobs');
+            const archivedGroup = document.getElementById('archivedJobs');
+
+            jobs.active.forEach(job => {
+                const option = document.createElement('option');
+                option.value = job.id;
+                option.textContent = `${job.company} - ${job.role}`;
+                activeGroup.appendChild(option);
+            });
+
+            jobs.archived.forEach(job => {
+                const option = document.createElement('option');
+                option.value = job.id;
+                option.textContent = `${job.company} - ${job.role}`;
+                archivedGroup.appendChild(option);
+            });
+
+            // Hide archived group if empty
+            if (jobs.archived.length === 0) {
+                archivedGroup.style.display = 'none';
+            }
+        }
+
+        function switchJob(jobId) {
+            currentJobId = jobId;
+            currentIndex = 0;
+            loadJob(jobId);
+        }
+
+        function loadJob(jobId) {
+            const deck = decks[jobId];
+            const job = [...jobs.active, ...jobs.archived].find(j => j.id === jobId);
+
+            if (!deck || !job) {
+                console.error('Job or deck not found:', jobId);
+                return;
+            }
+
+            questions = deck.questions;
+            vocabulary = deck.vocabulary;
+
+            // Update job info display
+            document.getElementById('jobPay').textContent = job.pay;
+
+            if (job.deadline) {
+                const deadline = new Date(job.deadline);
+                const now = new Date();
+                const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+                document.getElementById('jobDeadline').textContent = daysLeft > 0
+                    ? `${daysLeft} days left`
+                    : 'Deadline passed';
+                document.getElementById('jobDeadline').style.color = daysLeft <= 2 ? '#ff6b6b' : '#fdcb6e';
+            } else {
+                document.getElementById('jobDeadline').textContent = '';
+            }
+
+            document.getElementById('jobStatus').textContent = job.status;
+
+            // Update UI
+            document.getElementById('total').textContent = questions.length;
+            renderQuestionList();
+            renderVocabulary();
+            showCard(0);
+        }
+
+        function renderVocabulary() {
+            const grid = document.getElementById('vocab-grid');
+            grid.innerHTML = vocabulary.map(v => `
+                <div class="vocab-item">
+                    <div class="vocab-term">${v.term}</div>
+                    <div class="vocab-def">${v.definition}</div>
+                </div>
+            `).join('');
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('studyModeBtn').classList.toggle('active', mode === 'study');
+            document.getElementById('practiceModeBtn').classList.toggle('active', mode === 'practice');
+            document.getElementById('studySection').style.display = mode === 'study' ? 'flex' : 'none';
+            document.getElementById('practiceSection').classList.toggle('show', mode === 'practice');
+
+            if (mode === 'practice') {
+                document.getElementById('practiceQuestion').textContent = questions[currentIndex].question;
+            }
+        }
+
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                let finalTranscript = '';
+
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            finalTranscript += event.results[i][0].transcript + ' ';
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    document.getElementById('transcriptText').textContent = finalTranscript + interimTranscript;
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                };
+            }
+        }
+
+        function renderQuestionList() {
+            const list = document.getElementById('question-list');
+            list.innerHTML = questions.map((q, i) => `
+                <div class="question-item ${i === 0 ? 'active' : ''}" onclick="jumpToCard(${i})" id="q-item-${i}">
+                    <div class="q-category">${q.category}</div>
+                    <div class="q-text">${q.question}</div>
+                </div>
+            `).join('');
+        }
+
+        function showCard(index) {
+            const q = questions[index];
+            document.getElementById('front-category').textContent = q.category;
+            document.getElementById('question-text').textContent = q.question;
+
+            // Terminology
+            document.getElementById('back-term-header').textContent = q.termHeader || 'What Is This?';
+            document.getElementById('back-terminology').textContent = q.terminology;
+
+            document.getElementById('back-plain-english').textContent = q.plainEnglish;
+            document.getElementById('back-dont-say').textContent = q.dontSay;
+
+            // STAR format
+            const star = q.starAnswer;
+            document.getElementById('back-good-answer').innerHTML = `
+                <div class="star-line"><span class="star-label">S:</span> ${star.S}</div>
+                <div class="star-line"><span class="star-label">T:</span> ${star.T}</div>
+                <div class="star-line"><span class="star-label">A:</span> ${star.A}</div>
+                <div class="star-line"><span class="star-label">R:</span> ${star.R}</div>
+            `;
+
+            document.getElementById('current').textContent = index + 1;
+            document.getElementById('practiceQuestion').textContent = q.question;
+
+            // Update active state in list
+            document.querySelectorAll('.question-item').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+
+            // Reset flip
+            isFlipped = false;
+            document.getElementById('flashcard').classList.remove('flipped');
+
+            // Scroll list item into view
+            const item = document.getElementById(`q-item-${index}`);
+            if (item) {
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % questions.length;
+            showCard(currentIndex);
+        }
+
+        function prevCard() {
+            currentIndex = (currentIndex - 1 + questions.length) % questions.length;
+            showCard(currentIndex);
+        }
+
+        function jumpToCard(index) {
+            currentIndex = index;
+            showCard(currentIndex);
+        }
+
+        // Recording functions
+        const recordBtn = document.getElementById('recordBtn');
+
+        recordBtn.addEventListener('click', async () => {
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+                await startRecording();
+            } else if (mediaRecorder.state === 'recording') {
+                stopRecording();
+            }
+        });
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                // Reset transcript
+                document.getElementById('transcriptText').textContent = '';
+                document.getElementById('transcriptBox').classList.add('show');
+
+                mediaRecorder.ondataavailable = (e) => {
+                    audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audioPlayer = document.getElementById('audioPlayer');
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.style.display = 'block';
+                    document.getElementById('practiceControls').style.display = 'flex';
+
+                    // Calculate metrics
+                    const duration = (Date.now() - startTime) / 1000;
+                    const transcript = document.getElementById('transcriptText').textContent;
+                    const words = transcript.trim().split(/\s+/).filter(w => w.length > 0).length;
+                    const wpm = Math.round((words / duration) * 60);
+
+                    // Display metrics
+                    document.getElementById('metricsRow').style.display = 'flex';
+
+                    const durationEl = document.getElementById('metricDuration');
+                    durationEl.textContent = Math.round(duration) + 's';
+                    durationEl.className = 'metric-value ' + (duration >= 60 && duration <= 90 ? 'good' : duration >= 45 && duration <= 120 ? 'ok' : 'bad');
+
+                    document.getElementById('metricWords').textContent = words;
+
+                    const wpmEl = document.getElementById('metricWPM');
+                    wpmEl.textContent = wpm;
+                    wpmEl.className = 'metric-value ' + (wpm >= 120 && wpm <= 150 ? 'good' : wpm >= 100 && wpm <= 170 ? 'ok' : 'bad');
+                };
+
+                mediaRecorder.start();
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 100);
+
+                // Start speech recognition
+                if (recognition) {
+                    recognition.start();
+                }
+
+                recordBtn.textContent = 'STOP';
+                recordBtn.classList.remove('ready');
+                recordBtn.classList.add('recording');
+                document.getElementById('recordStatus').textContent = 'Recording... Click to stop';
+
+            } catch (err) {
+                console.error('Mic error:', err);
+                document.getElementById('recordStatus').textContent = 'Mic access denied. Check browser permissions.';
+            }
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            clearInterval(timerInterval);
+
+            if (recognition) {
+                recognition.stop();
+            }
+
+            recordBtn.textContent = 'DONE';
+            recordBtn.classList.remove('recording');
+            recordBtn.disabled = true;
+            document.getElementById('recordStatus').textContent = 'Recording complete! Review your answer.';
+        }
+
+        function updateTimer() {
+            const elapsed = (Date.now() - startTime) / 1000;
+            const mins = Math.floor(elapsed / 60);
+            const secs = Math.floor(elapsed % 60);
+            document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function resetPractice() {
+            document.getElementById('timer').textContent = '0:00';
+            document.getElementById('recordStatus').textContent = 'Click to start recording';
+            recordBtn.textContent = 'START';
+            recordBtn.classList.add('ready');
+            recordBtn.classList.remove('recording');
+            recordBtn.disabled = false;
+            document.getElementById('audioPlayer').style.display = 'none';
+            document.getElementById('practiceControls').style.display = 'none';
+            document.getElementById('metricsRow').style.display = 'none';
+            document.getElementById('transcriptBox').classList.remove('show');
+            document.getElementById('transcriptText').textContent = '';
+            audioChunks = [];
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && currentMode === 'study') {
+                e.preventDefault();
+                flipCard();
+            } else if (e.code === 'ArrowRight') {
+                nextCard();
+            } else if (e.code === 'ArrowLeft') {
+                prevCard();
+            } else if (e.code === 'KeyR' && currentMode === 'practice') {
+                recordBtn.click();
+            }
+        });
+
+        init();
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then((reg) => console.log('Service Worker registered'))
+                .catch((err) => console.log('Service Worker registration failed:', err));
+        }
+
+        // ===============================
+        // MOBILE FUNCTIONS
+        // ===============================
+
+        function openDrawer() {
+            document.getElementById('listDrawer').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            document.getElementById('listDrawer').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function closeDrawerOnBackdrop(event) {
+            if (event.target.id === 'listDrawer') {
+                closeDrawer();
+            }
+        }
+
+        function renderMobileQuestionList() {
+            const list = document.getElementById('mobile-question-list');
+            if (!list) return;
+            list.innerHTML = questions.map((q, i) => `
+                <div class="question-item ${i === currentIndex ? 'active' : ''}"
+                     onclick="jumpToCard(${i}); closeDrawer();" id="mobile-q-item-${i}">
+                    <div class="q-category">${q.category}</div>
+                    <div class="q-text">${q.question}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderMobileVocabulary() {
+            const grid = document.getElementById('mobile-vocab-grid');
+            if (!grid) return;
+            grid.innerHTML = vocabulary.map(v => `
+                <div class="vocab-item">
+                    <div class="vocab-term">${v.term}</div>
+                    <div class="vocab-def">${v.definition}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateMobileCounter() {
+            const current = document.getElementById('mobile-current');
+            const total = document.getElementById('mobile-total');
+            if (current) current.textContent = currentIndex + 1;
+            if (total) total.textContent = questions.length;
+        }
+
+        // Override renderQuestionList to also render mobile
+        const originalRenderQuestionList = renderQuestionList;
+        renderQuestionList = function() {
+            originalRenderQuestionList();
+            renderMobileQuestionList();
+        };
+
+        // Override renderVocabulary to also render mobile
+        const originalRenderVocabulary = renderVocabulary;
+        renderVocabulary = function() {
+            originalRenderVocabulary();
+            renderMobileVocabulary();
+        };
+
+        // Override showCard to update mobile counter
+        const originalShowCard = showCard;
+        showCard = function(index) {
+            originalShowCard(index);
+            updateMobileCounter();
+
+            // Update mobile list active state
+            document.querySelectorAll('#mobile-question-list .question-item').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+        };
+
+        // ===============================
+        // SWIPE GESTURE HANDLING
+        // ===============================
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        const flashcardEl = document.getElementById('flashcard');
+
+        flashcardEl.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        flashcardEl.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            const minSwipeDistance = 50;
+
+            // Only handle horizontal swipes (ignore vertical scrolling)
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+                if (diffX > 0) {
+                    // Swipe right - previous card
+                    prevCard();
+                } else {
+                    // Swipe left - next card
+                    nextCard();
+                }
+            } else if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
+                // Tap - flip card
+                flipCard();
+            }
+        }
+
+        // Initialize mobile on load
+        updateMobileCounter();
+    </script>
+</body>
+</html>
