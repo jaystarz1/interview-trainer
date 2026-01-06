@@ -813,35 +813,35 @@
             }
 
             .question-text {
-                font-size: 1.1rem;
+                font-size: 1.4rem;
             }
 
             .category-badge {
-                font-size: 0.65rem;
-                padding: 4px 10px;
+                font-size: 0.75rem;
+                padding: 5px 12px;
             }
 
             .hint {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
             }
 
-            /* Card back - tighter spacing */
+            /* Card back - readable spacing */
             .back-section {
-                margin-bottom: 10px;
-                padding: 8px;
+                margin-bottom: 12px;
+                padding: 10px;
             }
 
             .back-section h4 {
-                font-size: 0.65rem;
+                font-size: 0.85rem;
             }
 
             .back-section p {
-                font-size: 0.75rem;
+                font-size: 1rem;
             }
 
             .star-line {
-                font-size: 0.75rem;
-                margin-bottom: 4px;
+                font-size: 1rem;
+                margin-bottom: 5px;
             }
 
             .star-label {
@@ -936,12 +936,12 @@
             }
 
             .question-text {
-                font-size: 1rem;
+                font-size: 1.2rem;
             }
 
             .back-section p,
             .star-line {
-                font-size: 0.7rem;
+                font-size: 0.9rem;
             }
 
             .mode-btn {
@@ -1098,7 +1098,7 @@
             <kbd>Space</kbd> flip card &nbsp; <kbd>&#8592;</kbd> previous &nbsp; <kbd>&#8594;</kbd> next &nbsp; <kbd>R</kbd> record (practice mode)
         </div>
 
-        <div class="swipe-hint">Swipe left/right to navigate, tap card to flip</div>
+        <div class="swipe-hint">Swipe left/right to navigate • Use Flip button below</div>
     </div>
 
     <!-- Mobile Bottom Navigation -->
@@ -1107,6 +1107,7 @@
             <button onclick="prevCard()" aria-label="Previous">&#9664;</button>
             <span class="mobile-counter"><span id="mobile-current">1</span> / <span id="mobile-total">0</span></span>
             <button onclick="nextCard()" aria-label="Next">&#9654;</button>
+            <button onclick="flipCard()" aria-label="Flip">Flip</button>
             <button class="mobile-list-btn" onclick="openDrawer()">List</button>
         </div>
     </div>
