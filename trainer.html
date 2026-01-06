@@ -191,7 +191,7 @@
             transform: rotateY(180deg);
         }
 
-        /* Card back sections */
+        /* Card back sections - collapsible on mobile */
         .back-section {
             margin-bottom: 12px;
             padding: 10px;
@@ -208,6 +208,55 @@
             text-transform: uppercase;
             margin-bottom: 6px;
             letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-section h4::after {
+            content: '';
+            display: none;
+        }
+
+        .back-section .section-content {
+            transition: max-height 0.3s ease;
+        }
+
+        /* Mobile: collapsed by default except STAR */
+        @media (max-width: 900px) {
+            .back-section h4::after {
+                content: '+';
+                display: inline-block;
+                font-size: 1rem;
+                font-weight: bold;
+                margin-left: 10px;
+            }
+
+            .back-section.expanded h4::after {
+                content: '−';
+            }
+
+            .back-section .section-content {
+                max-height: 0;
+                overflow: hidden;
+                margin-top: 0;
+            }
+
+            .back-section.expanded .section-content {
+                max-height: 500px;
+                margin-top: 6px;
+            }
+
+            /* STAR answer expanded by default */
+            .back-section.good-answer .section-content {
+                max-height: 500px;
+                margin-top: 6px;
+            }
+
+            .back-section.good-answer h4::after {
+                content: '−';
+            }
         }
 
         .back-section.terminology h4 { color: #fdcb6e; }
