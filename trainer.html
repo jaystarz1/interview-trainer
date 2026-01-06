@@ -102,6 +102,21 @@
             text-transform: uppercase;
         }
 
+        .job-posting-link {
+            color: #00d4ff;
+            font-size: 0.8rem;
+            text-decoration: none;
+            padding: 4px 10px;
+            border: 1px solid #00d4ff;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .job-posting-link:hover {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+
         /* Mode Toggle */
         .mode-toggle {
             grid-column: 1 / -1;
@@ -982,6 +997,7 @@
                 <span class="job-pay" id="jobPay">$45-75/hr</span>
                 <span class="job-deadline" id="jobDeadline"></span>
                 <span class="job-status" id="jobStatus"></span>
+                <a href="#" id="jobPosting" target="_blank" class="job-posting-link">View Posting</a>
             </div>
         </div>
 
@@ -1140,7 +1156,8 @@
                     pay: "$45-75/hr USD",
                     deadline: "2026-01-07T16:41:00",
                     status: "applied",
-                    notes: "AI interview required (~54 min)"
+                    notes: "AI interview required (~54 min)",
+                    postingUrl: "https://jobs.micro1.ai/post/78b58c83-3ca4-4e75-9c6f-eb42d4777031"
                 },
                 {
                     id: "micro1-writer-editor",
@@ -1149,7 +1166,8 @@
                     pay: "$50-150/hr USD",
                     deadline: null,
                     status: "applied",
-                    notes: "AI interview required"
+                    notes: "AI interview required",
+                    postingUrl: "https://jobs.micro1.ai/post/35281201-28a1-4cc3-83c4-de2e904ce09c"
                 },
                 {
                     id: "micro1-native-english",
@@ -1158,7 +1176,8 @@
                     pay: "$40-90/hr USD",
                     deadline: null,
                     status: "applied",
-                    notes: "AI interview required"
+                    notes: "AI interview required",
+                    postingUrl: "https://jobs.micro1.ai/post/144df73c-50bf-40c3-a982-7174bc72f430"
                 }
             ],
             archived: []
@@ -1834,6 +1853,15 @@
             }
 
             document.getElementById('jobStatus').textContent = job.status;
+
+            // Update posting link
+            const postingLink = document.getElementById('jobPosting');
+            if (job.postingUrl) {
+                postingLink.href = job.postingUrl;
+                postingLink.style.display = 'inline-block';
+            } else {
+                postingLink.style.display = 'none';
+            }
 
             // Update UI
             document.getElementById('total').textContent = questions.length;
