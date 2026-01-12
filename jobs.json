@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "version": "1.0",
+    "last_updated": "2026-01-12",
+    "description": "Manifest of job applications for interview trainer"
+  },
+  "active": [
+    {
+      "id": "cfmws-ai-adoption",
+      "company": "CFMWS",
+      "role": "IS Change Manager (AI Adoption Lead)",
+      "pay": "$110K",
+      "deck": "decks/cfmws-ai-adoption.json",
+      "deadline": "2026-01-12T15:00:00",
+      "status": "interview",
+      "notes": "Presentation + Q&A - 3:00 PM TODAY"
+    },
+    {
+      "id": "micro1-human-data-manager",
+      "company": "micro1",
+      "role": "Human Data Manager",
+      "pay": "$45-75/hr USD",
+      "deck": "decks/micro1-human-data-manager.json",
+      "deadline": "2026-01-07T16:41:00",
+      "status": "applied",
+      "notes": "AI interview required (~54 min)"
+    },
+    {
+      "id": "micro1-writer-editor",
+      "company": "micro1",
+      "role": "Writer/Editor - AI Trainer",
+      "pay": "$50-150/hr USD",
+      "deck": "decks/micro1-writer-editor.json",
+      "deadline": null,
+      "status": "applied",
+      "notes": "AI interview required"
+    },
+    {
+      "id": "micro1-native-english",
+      "company": "micro1",
+      "role": "English Native Speakers - AI Trainer",
+      "pay": "$40-90/hr USD",
+      "deck": "decks/micro1-native-english.json",
+      "deadline": null,
+      "status": "applied",
+      "notes": "AI interview required"
+    }
+  ],
+  "archived": []
+}
