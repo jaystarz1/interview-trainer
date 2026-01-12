@@ -980,6 +980,95 @@
                 display: none;
             }
         }
+
+        /* COPILOT INTEL MODE */
+        .copilot-section {
+            display: none;
+            grid-column: 1 / -1;
+            padding: 20px;
+        }
+        .copilot-section.show { display: block; }
+        .copilot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .intel-card {
+            background: #16213e;
+            border-radius: 16px;
+            padding: 25px;
+            border-left: 4px solid #00d4ff;
+        }
+        .intel-card.problem { border-left-color: #ff6b6b; }
+        .intel-card.solution { border-left-color: #00ff88; }
+        .intel-card.tip { border-left-color: #fdcb6e; }
+        .intel-card.your-play { border-left-color: #e94560; }
+        .intel-card h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .intel-card.problem h3 { color: #ff6b6b; }
+        .intel-card.solution h3 { color: #00ff88; }
+        .intel-card.tip h3 { color: #fdcb6e; }
+        .intel-card.your-play h3 { color: #e94560; }
+        .big-stat {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 12px;
+        }
+        .big-stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        .intel-card.problem .big-stat-number { color: #ff6b6b; }
+        .intel-card.solution .big-stat-number { color: #00ff88; }
+        .big-stat-label { font-size: 0.9rem; color: #ccc; }
+        .stat-source { font-size: 0.75rem; color: #888; margin-top: 8px; }
+        .intel-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .intel-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .intel-list li:last-child { border-bottom: none; }
+        .intel-list li strong { color: #fff; }
+        .intel-box {
+            background: #0f3460;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 12px;
+        }
+        .intel-box h4 {
+            color: #00d4ff;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        .intel-box p { color: #ddd; line-height: 1.5; font-size: 0.9rem; }
+        .intel-box .quote {
+            font-style: italic;
+            color: #fdcb6e;
+            border-left: 3px solid #fdcb6e;
+            padding-left: 12px;
+            margin: 10px 0;
+        }
+        .prompt-example {
+            background: #0a1628;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #00ff88;
+        }
     </style>
 </head>
 <body>
@@ -1005,6 +1094,7 @@
         <div class="mode-toggle">
             <button class="mode-btn active" id="studyModeBtn" onclick="setMode('study')">Study Mode</button>
             <button class="mode-btn" id="practiceModeBtn" onclick="setMode('practice')">Practice Mode</button>
+            <button class="mode-btn" id="copilotModeBtn" onclick="setMode('copilot')">Copilot Intel</button>
         </div>
 
         <!-- LEFT: Flashcard (Study Mode) -->
@@ -1110,7 +1200,154 @@
             </div>
         </div>
 
-        <div class="keyboard-hint">
+        <!-- COPILOT INTEL MODE -->
+        <div class="copilot-section" id="copilotSection">
+            <div class="copilot-grid">
+                <!-- THE REALITY -->
+                <div class="intel-card problem">
+                    <h3>The Copilot Reality Check</h3>
+                    <div class="big-stat">
+                        <span class="big-stat-number">2%</span>
+                        <span class="big-stat-label">adoption rate after 2 years (8M of 440M users)</span>
+                    </div>
+                    <div class="stat-source">Source: Internal Microsoft data leak, August 2025</div>
+                    <ul class="intel-list">
+                        <li><strong>Nadella admitted:</strong> "Integrations don't really work... not smart"</li>
+                        <li><strong>70% failure rate</strong> on real office tasks (Carnegie Mellon)</li>
+                        <li><strong>US Congress banned it</strong> over data security concerns</li>
+                        <li><strong>50% of enterprises</strong> still can't say if it's worth $30/month</li>
+                        <li><strong>70% shelfware</strong> - orgs buy licenses but nobody uses them</li>
+                    </ul>
+                    <div class="stat-source">Sources: PPC Land, CNBC Tech Executive Council, SAM Expert</div>
+                </div>
+
+                <!-- USER COMPLAINTS -->
+                <div class="intel-card problem">
+                    <h3>Common User Complaints</h3>
+                    <ul class="intel-list">
+                        <li><strong>"Practically useless"</strong> for document/Excel/PowerPoint edits</li>
+                        <li><strong>Gives instructions instead of doing work</strong> - users don't want tutorials</li>
+                        <li><strong>Hallucinations</strong> - fabricated dates, wrong facts, unsourced claims</li>
+                        <li><strong>Slow response times</strong> and frequent errors</li>
+                        <li><strong>Branding confusion</strong> - 6+ different "Copilots" with different capabilities</li>
+                        <li><strong>Security concerns</strong> - over-permissioning exposes confidential files</li>
+                        <li><strong>Forced upsells</strong> - Microsoft sued for misleading 2.7M users</li>
+                    </ul>
+                    <div class="intel-box">
+                        <h4>What This Means for CFMWS</h4>
+                        <p>Their people have probably tried Copilot, found it disappointing, and given up. Your job isn't to sell them on AI - it's to show them how to actually get value from what they have.</p>
+                    </div>
+                </div>
+
+                <!-- WHAT WORKS -->
+                <div class="intel-card solution">
+                    <h3>What Actually Works</h3>
+                    <div class="big-stat">
+                        <span class="big-stat-number">22%</span>
+                        <span class="big-stat-label">adoption boost with structured training + change management</span>
+                    </div>
+                    <ul class="intel-list">
+                        <li><strong>Role-specific training</strong> - not generic demos</li>
+                        <li><strong>Peer-to-peer learning</strong> - colleagues > IT handouts</li>
+                        <li><strong>Champions program</strong> - Microsoft uses 10,000 internal "Champs"</li>
+                        <li><strong>Prompt engineering training</strong> - most users don't know how to ask</li>
+                        <li><strong>Find existing power users</strong> - they become your advocates</li>
+                    </ul>
+                    <div class="intel-box">
+                        <p class="quote">"Peer influence can scale further and faster than policy alone. Employees show more interest in content their colleagues create."</p>
+                        <p style="font-size: 0.8rem; color: #888;">— Microsoft Adoption Team</p>
+                    </div>
+                </div>
+
+                <!-- PROMPT ENGINEERING -->
+                <div class="intel-card tip">
+                    <h3>Prompt Engineering Basics</h3>
+                    <p style="color: #ccc; margin-bottom: 12px;">Most users fail because they don't know how to ask. Teach the <strong>RTF Framework</strong>:</p>
+                    <ul class="intel-list">
+                        <li><strong>R - Role:</strong> "Acting as an experienced sales professional..."</li>
+                        <li><strong>T - Task:</strong> "Create a list of value propositions for CIOs..."</li>
+                        <li><strong>F - Format:</strong> "As a PowerPoint slide with 5 bullet points"</li>
+                    </ul>
+                    <div class="intel-box">
+                        <h4>Example Prompts That Work</h4>
+                        <div class="prompt-example">"Summarize this into a 300-word executive summary focusing on outcomes, risks, and next steps."</div>
+                        <div class="prompt-example">"Create a 6-slide outline on this topic, with one-sentence speaker notes per slide."</div>
+                        <div class="prompt-example">"Rewrite this for clarity and cut it by one-third, keeping the same meaning."</div>
+                    </div>
+                </div>
+
+                <!-- CHAMPIONS APPROACH -->
+                <div class="intel-card solution">
+                    <h3>The Champions Model</h3>
+                    <p style="color: #ccc; margin-bottom: 12px;">Microsoft's internal approach that works:</p>
+                    <ul class="intel-list">
+                        <li><strong>Train-the-trainer sessions</strong> - enable champs to run lunch-and-learns</li>
+                        <li><strong>Regular community calls</strong> - showcase wins, share best practices</li>
+                        <li><strong>Shout-outs</strong> - celebrate success stories publicly</li>
+                        <li><strong>Gamification</strong> - increases engagement 24%, productivity 50%</li>
+                        <li><strong>Camp Copilot</strong> - 3-week intensive adoption program</li>
+                    </ul>
+                    <div class="intel-box">
+                        <h4>Key Insight</h4>
+                        <p>"The way to get people to really adopt a change is to make it relevant to their roles, and you achieve that by showing them the value of that change."</p>
+                    </div>
+                </div>
+
+                <!-- YOUR PLAY -->
+                <div class="intel-card your-play">
+                    <h3>Your Play for CFMWS</h3>
+                    <p style="color: #ccc; margin-bottom: 12px;">How to position yourself as the solution:</p>
+                    <ul class="intel-list">
+                        <li><strong>Acknowledge the reality:</strong> "Copilot out of the box doesn't impress anyone"</li>
+                        <li><strong>Reframe the opportunity:</strong> "But with the right training, it saves real time"</li>
+                        <li><strong>Find the gray users:</strong> "Someone is already making it work - let's find them"</li>
+                        <li><strong>Role-specific training:</strong> "Facility managers need different prompts than HR"</li>
+                        <li><strong>Build champions:</strong> "Super Users become peer trainers in their divisions"</li>
+                        <li><strong>Prompt libraries:</strong> "Give people copy-paste prompts that actually work"</li>
+                    </ul>
+                    <div class="intel-box">
+                        <h4>The Pitch</h4>
+                        <p class="quote">"You gave everyone Copilot. That's a gym membership. I'm the personal trainer who shows up and says 'let me show you exercises that actually work for YOUR body.'"</p>
+                    </div>
+                </div>
+
+                <!-- WHAT COPILOT IS GOOD AT -->
+                <div class="intel-card tip">
+                    <h3>Where Copilot Actually Helps</h3>
+                    <p style="color: #ccc; margin-bottom: 12px;">Focus training on these use cases:</p>
+                    <ul class="intel-list">
+                        <li><strong>Meeting summaries</strong> - auto-recap Teams meetings</li>
+                        <li><strong>Email drafts</strong> - first pass on routine messages</li>
+                        <li><strong>Document summarization</strong> - long reports → key points</li>
+                        <li><strong>Excel formulas</strong> - "write a formula that..." (better than doing)</li>
+                        <li><strong>PowerPoint outlines</strong> - generate structure, then refine</li>
+                        <li><strong>Search/Recall</strong> - "find emails about X from last month"</li>
+                    </ul>
+                    <div class="intel-box">
+                        <h4>Where It Fails</h4>
+                        <p>Complex edits, precise formatting, tasks requiring judgment, anything needing real-time data. Set expectations early - it's an assistant, not a replacement.</p>
+                    </div>
+                </div>
+
+                <!-- RESOURCES -->
+                <div class="intel-card">
+                    <h3>Resources to Know About</h3>
+                    <ul class="intel-list">
+                        <li><strong>Microsoft Adoption Hub:</strong> adoption.microsoft.com/copilot</li>
+                        <li><strong>Copilot Success Kit:</strong> Downloadable training materials</li>
+                        <li><strong>Scenario Library:</strong> Role-specific use cases by industry</li>
+                        <li><strong>Viva Engage template:</strong> Community of Practice setup</li>
+                        <li><strong>Camp Copilot model:</strong> 3-week adoption sprint</li>
+                    </ul>
+                    <div class="intel-box">
+                        <h4>New in 2025</h4>
+                        <p><strong>Memory + Custom Instructions:</strong> Users can now set preferences once and have them apply everywhere. This is a training opportunity - help people configure their Copilot for their role.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="keyboard-hint" id="keyboardHint">
             <kbd>Space</kbd> flip card &nbsp; <kbd>&#8592;</kbd> previous &nbsp; <kbd>&#8594;</kbd> next &nbsp; <kbd>R</kbd> record (practice mode)
         </div>
 
@@ -2197,8 +2434,12 @@
             currentMode = mode;
             document.getElementById('studyModeBtn').classList.toggle('active', mode === 'study');
             document.getElementById('practiceModeBtn').classList.toggle('active', mode === 'practice');
+            document.getElementById('copilotModeBtn').classList.toggle('active', mode === 'copilot');
             document.getElementById('studySection').style.display = mode === 'study' ? 'flex' : 'none';
             document.getElementById('practiceSection').classList.toggle('show', mode === 'practice');
+            document.getElementById('copilotSection').classList.toggle('show', mode === 'copilot');
+            document.getElementById('listSection').style.display = mode === 'copilot' ? 'none' : 'block';
+            document.getElementById('keyboardHint').style.display = mode === 'copilot' ? 'none' : 'block';
 
             if (mode === 'practice') {
                 document.getElementById('practiceQuestion').textContent = questions[currentIndex].question;
