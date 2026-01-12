@@ -1150,6 +1150,16 @@
         const jobs = {
             active: [
                 {
+                    id: "cfmws-ai-adoption",
+                    company: "CFMWS",
+                    role: "IS Change Manager (AI Adoption Lead)",
+                    pay: "$110K",
+                    deadline: "2026-01-12T15:00:00",
+                    status: "interview",
+                    notes: "Presentation + Q&A - 3:00 PM TODAY",
+                    postingUrl: null
+                },
+                {
                     id: "micro1-human-data-manager",
                     company: "micro1",
                     role: "Human Data Manager",
@@ -1187,6 +1197,309 @@
         // DECK DATA (embedded from JSON files)
         // ===============================
         const decks = {
+            "cfmws-ai-adoption": {
+                meta: {
+                    job_id: "cfmws-ai-adoption",
+                    company: "CFMWS",
+                    role: "IS Change Manager (AI Adoption Lead)",
+                    keywords: ["AI adoption", "change management", "training", "Copilot", "enterprise", "4000 employees", "pilot trap"]
+                },
+                vocabulary: [
+                    {term: "Pilot Purgatory", definition: "State where AI pilots never scale (8/10 companies)"},
+                    {term: "95% Failure", definition: "Rate of AI pilots failing to deliver ROI (MIT)"},
+                    {term: "42% Abandon", definition: "Companies abandoning AI initiatives (S&P Global)"},
+                    {term: "9x Adoption", definition: "Impact of manager support on AI adoption (Gallup)"},
+                    {term: "75% Fear", definition: "Employees worried AI will replace them (EY)"},
+                    {term: "41% Sabotage", definition: "Younger employees admitting to sabotaging AI (EY)"},
+                    {term: "80% vs 37%", definition: "Success rate WITH vs WITHOUT formal AI strategy"},
+                    {term: "70% Failure", definition: "Change initiatives failing due to employee pushback"},
+                    {term: "Super Users", definition: "Trained champions who multiply adoption reach"},
+                    {term: "Gray AI", definition: "Employees secretly using AI - make them allies"}
+                ],
+                questions: [
+                    {
+                        category: "Opening",
+                        question: "Tell me about yourself and why you're interested in this AI Adoption Lead role.",
+                        termHeader: "The 60-Second Pitch",
+                        terminology: "This is your chance to control the narrative. Structure: Past (relevant experience) > Present (what you're doing now) > Future (why this role). Keep it under 90 seconds. End by connecting to THEIR needs.",
+                        plainEnglish: "Give me the highlight reel. Why should I keep listening? Why THIS job at THIS organization?",
+                        dontSay: "Don't read your resume chronologically. Don't spend time on irrelevant early career. Don't be vague about why CFMWS specifically.",
+                        starAnswer: {
+                            S: "I've spent 30 years in the CAF, with the last 3 years focused specifically on AI adoption and change management.",
+                            T: "I've been the person bridging the gap between AI capabilities and people who need to actually use them.",
+                            A: "I founded an AI developer community, teach GenAI at U-Go (522+ views), built medictate.ai over 14 months, and wrote books making AI accessible. As Tiger Team Lead, I led change that cut processing time 80%.",
+                            R: "What draws me to CFMWS specifically: I know the CAF community, I understand change fatigue in military organizations, and I genuinely believe AI can help MWS programs serve members better. I want to be the person who makes that happen."
+                        }
+                    },
+                    {
+                        category: "AI Tools",
+                        question: "Tell us about your experience with Microsoft Copilot or similar AI productivity tools.",
+                        termHeader: "What Is Microsoft Copilot?",
+                        terminology: "Microsoft's AI assistant integrated into Office 365 - helps with document drafting, email composition, meeting summaries, data analysis in Excel. Key for enterprise AI adoption because it's where people already work.",
+                        plainEnglish: "Have you actually USED these tools in real work, or just heard about them? Can you teach others from experience?",
+                        dontSay: "Don't just say 'I've used ChatGPT.' Show enterprise tool experience. Don't oversell capabilities or ignore limitations.",
+                        starAnswer: {
+                            S: "At DND, I've been using Microsoft Copilot for Office 365 since it rolled out to our network.",
+                            T: "Integrate it into daily workflows and understand what it's actually good at vs. hype.",
+                            A: "Use it for drafting briefing notes, summarizing long email chains, generating first drafts of policy documents. Also built Power Apps solutions for administrative tracking. Outside DND, I use Claude Code daily for development work.",
+                            R: "I know these tools from the user side - what actually saves time, where they fail, what the learning curve looks like. That hands-on experience is what I'd bring to training others."
+                        }
+                    },
+                    {
+                        category: "Training",
+                        question: "Describe your experience designing and delivering training programs. How would you approach AI training for diverse audiences?",
+                        termHeader: "What Is AI Enablement Training?",
+                        terminology: "Teaching non-technical users to effectively use AI tools. Not about how AI works technically - about practical application, prompt engineering basics, knowing when to use which tool, and building confidence.",
+                        plainEnglish: "Can you actually teach people, or just talk about AI? Have you trained groups before? What was the result?",
+                        dontSay: "Don't describe presentations as 'training.' Don't claim to train without numbers. Don't ignore the fear factor - people are scared of AI.",
+                        starAnswer: {
+                            S: "I've designed and delivered training in two very different contexts: Canadian Army (formal) and U-Go (volunteer GenAI education for Africa/Southeast Asia).",
+                            T: "Create curriculum that works for people with zero AI background and makes them confident users.",
+                            A: "For Harassment Advisors, I built progressive curriculum from policy basics to complex scenarios - trained approximately 120 across the Army. At U-Go, I created a model GenAI lesson that became the program standard - 522+ views on YouTube.",
+                            R: "The approach I'd bring: Start with their actual work problems, not AI features. Show quick wins first to build confidence. Give people safe space to experiment. The 120 advisors and the U-Go curriculum prove I can teach at scale."
+                        }
+                    },
+                    {
+                        category: "Change Management",
+                        question: "Tell me about a significant change initiative you led. How did you handle resistance?",
+                        termHeader: "What Is Change Management?",
+                        terminology: "Structured approach to transitioning organizations from current state to desired future state. Key elements: stakeholder analysis, communication planning, training, addressing resistance, measuring adoption. In AI: overcoming fear and building trust.",
+                        plainEnglish: "Have you actually pushed change through a resistant organization? How did you deal with the people who didn't want to change?",
+                        dontSay: "Don't describe a project where change just happened. Don't minimize resistance. Don't claim everyone was on board - that's not realistic.",
+                        starAnswer: {
+                            S: "As Tiger Team Lead at Grievance Authority, I inherited a process that was bureaucratic, slow, and deeply entrenched. People had been doing it the same way for years.",
+                            T: "Redesign the grievance screening process while getting buy-in from analysts who were comfortable with the old way.",
+                            A: "Didn't mandate change top-down. Brought senior analysts into design process, let them see the data on delays, piloted with volunteers first. When early adopters saw 3-4x output increase, others wanted in.",
+                            R: "Reduced processing from 15 days to 3 days - 80% improvement. Process became organization-wide standard. Key lesson: show don't tell, involve resisters early, let results speak."
+                        }
+                    },
+                    {
+                        category: "Metrics & Reporting",
+                        question: "How would you track and report on AI adoption progress? What metrics would you prioritize?",
+                        termHeader: "What Are Adoption Metrics?",
+                        terminology: "Quantitative measures of how well new technology is being used: active users, feature utilization, task completion rates, time savings, user satisfaction. For AI: also quality of outputs and appropriate use cases.",
+                        plainEnglish: "Can you prove adoption is working, or just claim it? What numbers would you show leadership to demonstrate success?",
+                        dontSay: "Don't focus only on 'number of people trained' - that's input, not outcome. Don't propose metrics you can't actually measure. Don't forget qualitative feedback.",
+                        starAnswer: {
+                            S: "At Grievance Authority, I had to demonstrate process improvement results to the Director and eventually the Chief of Defence Staff delegates.",
+                            T: "Create metrics that showed real impact, not just activity.",
+                            A: "Tracked: processing time (15 days to 3 days), analyst throughput (3-4x increase), eligibility rate for streamlined process (75%), and qualitative feedback from members on response times.",
+                            R: "For AI adoption, I'd propose similar: Active users per week, feature utilization rates, time saved on specific tasks, and most importantly - qualitative stories of how AI helped real work. Leadership wants to see impact, not just training completion rates."
+                        }
+                    },
+                    {
+                        category: "Collaboration",
+                        question: "Describe a time you collaborated across different teams (IT, business units, leadership) to implement a technology solution.",
+                        termHeader: "What Is Cross-Functional Collaboration?",
+                        terminology: "Working with people from different departments who have different priorities, languages, and constraints. In AI adoption: IT (security/infrastructure), business units (use cases), leadership (strategy/budget), users (practical needs).",
+                        plainEnglish: "Can you work with IT people AND business people AND executives? Can you speak all their languages?",
+                        dontSay: "Don't describe working within your own team as cross-functional. Don't minimize the friction between groups. Show you bridged real gaps.",
+                        starAnswer: {
+                            S: "Building medictate.ai, I worked with healthcare providers who knew medicine but not AI, and I understood AI but not clinical workflows.",
+                            T: "Translate between worlds - understand their actual needs and turn that into technical requirements.",
+                            A: "Sat in on actual dictation sessions, documented edge cases they struggled with, designed data collection targeting those pain points. Didn't assume I knew their needs - I learned them firsthand.",
+                            R: "After 14 months of iteration, tool hit 94% accuracy on medical terminology. In this role, I'd do the same: learn what IT needs for security, learn what business units actually do, then design adoption that works for everyone."
+                        }
+                    },
+                    {
+                        category: "Change Management",
+                        question: "How do you address change fatigue when introducing new technology to an organization that's experienced many recent changes?",
+                        termHeader: "What Is Change Fatigue?",
+                        terminology: "Exhaustion and resistance that builds when people face constant organizational changes. Symptoms: apathy, cynicism, passive resistance. Common in military/government after years of transformation initiatives. AI adds another layer.",
+                        plainEnglish: "People are tired of being told to change. How do you get buy-in when they've heard 'this will make your job easier' a hundred times before?",
+                        dontSay: "Don't dismiss change fatigue as 'resistance to change.' Don't promise AI will solve everything. Don't ignore that people have been burned before.",
+                        starAnswer: {
+                            S: "I've seen change fatigue firsthand - 30 years in the CAF means I've lived through countless transformation initiatives, some good, many not.",
+                            T: "Introduce AI in a way that doesn't feel like 'another thing being done to us.'",
+                            A: "Three principles: First, acknowledge the fatigue openly - 'I know you've heard this before.' Second, start with their pain points, not organizational priorities. Third, quick wins that THEY see immediately - not leadership dashboards.",
+                            R: "At Grievance Authority, I got buy-in by involving resisters in design and letting early wins speak. For AI, same approach: show how it helps THEIR day, not abstractly 'helps the organization.'"
+                        }
+                    },
+                    {
+                        category: "Communication",
+                        question: "Tell us about your experience delivering presentations and demonstrations to diverse audiences.",
+                        termHeader: "Why Demos Matter",
+                        terminology: "Live demonstrations of AI capabilities are the most effective adoption tool - but also risky. When they go well, they create believers. When they fail, they create skeptics. Requires preparation, contingency plans, and knowing your audience.",
+                        plainEnglish: "Can you stand up in front of executives and make AI look good? What about when it doesn't work as expected?",
+                        dontSay: "Don't just describe giving presentations - show you've handled tough audiences. Don't ignore that live demos can fail.",
+                        starAnswer: {
+                            S: "Six years producing briefing notes and recommendations for Chief of Defence Staff and delegates - I know high-stakes presentation.",
+                            T: "Communicate complex information to senior leaders who have limited time and high expectations.",
+                            A: "Learned to lead with 'so what' - what do they need to decide? Then supporting evidence. For demos, I always have backup examples ready, and I'm honest when AI limitations show up - builds more trust than pretending it's perfect.",
+                            R: "Presented to CDS delegates, RCN/CA/RCAF Commanders. Published YouTube lesson with 522+ views. For this role, I'd approach AI demos the same way: know the audience, show real use cases, be honest about limitations."
+                        }
+                    },
+                    {
+                        category: "Content",
+                        question: "What experience do you have creating educational content for intranet or digital platforms?",
+                        termHeader: "What Is AI Educational Content?",
+                        terminology: "Resources that help users learn AI tools on their own: guides, videos, FAQs, tip sheets, use case examples. Good content reduces training load and provides reference material. Needs to be searchable, scannable, and practical.",
+                        plainEnglish: "Can you write guides people will actually read? Have you made instructional content before?",
+                        dontSay: "Don't describe policy documents as 'educational content.' Don't ignore that people skim - content needs to be scannable. Show you understand different formats.",
+                        starAnswer: {
+                            S: "I've created educational content across multiple formats: published books, YouTube lessons, training curricula, and operational guides.",
+                            T: "Make complex topics accessible to people who don't have time to read hundreds of pages.",
+                            A: "For Chatbot Genius, broke AI concepts into digestible chapters with practical exercises. For U-Go, created video lessons designed for people with zero AI background. For Harassment Advisors, built scenario-based guides they could reference in the moment.",
+                            R: "10 published books, curriculum that became program standard, 522+ views on instructional video. I know how to create content people actually use, not just content that exists."
+                        }
+                    },
+                    {
+                        category: "Motivation",
+                        question: "Why CFMWS specifically? What draws you to this organization?",
+                        termHeader: "Know Your 'Why'",
+                        terminology: "This tests whether you've done your homework and have genuine interest in the organization's mission. CFMWS provides Morale and Welfare programs for CAF members - gyms, recreation, family support, retail, financial services.",
+                        plainEnglish: "Did you just apply everywhere, or do you actually want to work HERE? What do you know about what we do?",
+                        dontSay: "Don't be vague about CFMWS. Don't make it all about you. Show you understand their mission and want to contribute to it.",
+                        starAnswer: {
+                            S: "30 years in the CAF means I've been a CFMWS customer my entire career - I know the programs firsthand.",
+                            T: "Explain why this specific organization, not just 'AI adoption lead.'",
+                            A: "CFMWS serves CAF members and families during their service and transition. I've seen how MWS programs affect morale and retention. AI can help these programs scale and personalize - better fitness programs, faster family support, smarter retail.",
+                            R: "This isn't a generic AI job for me. I want to use AI to help the community I've been part of for 30 years. That's not something I can get anywhere else."
+                        }
+                    },
+                    {
+                        category: "Technical",
+                        question: "What experience do you have with software rollouts or technology deployment initiatives?",
+                        termHeader: "What Is Technology Deployment?",
+                        terminology: "The process of rolling out new software to an organization: piloting, phased deployment, training coordination, support structures, issue tracking, user feedback loops. Different from just 'turning it on.'",
+                        plainEnglish: "Have you been involved in actually deploying software to users? Do you understand why rollouts fail?",
+                        dontSay: "Don't confuse using software with deploying it. Don't ignore that rollouts always have problems. Show you understand the process.",
+                        starAnswer: {
+                            S: "My technology deployment experience is more about process than software - but the principles transfer directly.",
+                            T: "Roll out new processes to resistant organizations while maintaining quality.",
+                            A: "At Grievance Authority, implemented new screening process organization-wide: piloted with small group first, documented issues, refined approach, then expanded. Same pattern works for software: pilot > learn > refine > scale.",
+                            R: "The process redesign became the standard because we didn't try to do everything at once. For AI deployment, I'd follow the same pattern: identify early adopters, pilot with them, use their success stories to bring others along."
+                        }
+                    },
+                    {
+                        category: "Behavioral",
+                        question: "Tell me about a time something didn't go as planned. What did you learn?",
+                        termHeader: "The Failure Question",
+                        terminology: "Every interview includes a failure question. They're testing self-awareness and ability to learn. Pick something real (not a humble brag), explain what went wrong, and focus most time on what you learned and changed.",
+                        plainEnglish: "Are you self-aware enough to admit failure? Can you learn from mistakes? Or will you blame others?",
+                        dontSay: "Don't pick a trivial failure or a humble brag ('I work too hard'). Don't blame others. Don't skip to what you learned without owning the failure.",
+                        starAnswer: {
+                            S: "Early in remote grievance work, I assumed my international team in UK/Germany/Italy would flag concerns about my analysis approach. They didn't.",
+                            T: "Figure out what went wrong and prevent it from happening again.",
+                            A: "Took responsibility - I should have proactively set up check-ins instead of assuming silence meant agreement. Different cultures, different communication norms.",
+                            R: "Now I over-communicate by default. Weekly written updates, explicit asks for feedback. For AI adoption, same lesson: don't assume silence means understanding. Check in proactively."
+                        }
+                    },
+                    {
+                        category: "Closing",
+                        question: "What questions do you have for us?",
+                        termHeader: "Your Questions Matter",
+                        terminology: "This tests whether you've thought seriously about the role. Good questions show preparation and genuine interest. Bad questions (or no questions) signal you're not that interested or haven't done your homework.",
+                        plainEnglish: "Did you prepare for this interview? Are you actually trying to figure out if this job is right for you?",
+                        dontSay: "Don't say 'No questions' or ask about salary/benefits (not yet). Don't ask things easily found on the website. Ask about the WORK.",
+                        starAnswer: {
+                            S: "Prepared questions that show I've thought about the role and want to understand how to succeed.",
+                            T: "Ask questions that demonstrate genuine interest and help me understand the real challenges.",
+                            A: "Sample questions: 'What does success look like in the first 6 months?' 'What's the biggest barrier to AI adoption you've seen so far?' 'How does this role interact with IT vs. business units?' 'What's the appetite for experimentation?'",
+                            R: "Good questions show you're thinking about HOW to do the job, not just whether you'll get it."
+                        }
+                    },
+                    {
+                        category: "Hard Question",
+                        question: "Have you ever implemented AI at this scale before? 4,000 people is a lot.",
+                        termHeader: "The Scale Challenge",
+                        terminology: "They're testing whether you're in over your head. 4,000 employees across 4 business lines is significant. But nobody has done this before - AI adoption at enterprise scale is new for everyone.",
+                        plainEnglish: "Are you out of your league? Why should we trust you with something this big?",
+                        dontSay: "Don't pretend you've done exactly this before. Don't minimize the challenge. Don't be defensive.",
+                        starAnswer: {
+                            S: "No, I haven't - and here's the thing: if you want someone with prior 4,000-person AI implementation experience, you won't find them. This is new for everyone.",
+                            T: "Show how smaller-scale successes translate to larger scale.",
+                            A: "What I HAVE done: Trained 120+ Harassment Advisors across the Canadian Army, coast-to-coast. Same pattern: identify gap, get buy-in, design, coordinate, deliver, measure.",
+                            R: "The scale difference is handled by the multiplier structure: I train Super Users who become surrogate trainers. Same model that worked for 120 works for 4,000."
+                        }
+                    },
+                    {
+                        category: "Hard Question",
+                        question: "How do you know your plan will work for 4,000 people?",
+                        termHeader: "Proof of Concept",
+                        terminology: "They want evidence, not promises. Your answer needs math and precedent, not just confidence.",
+                        plainEnglish: "Convince me this isn't just a nice PowerPoint. What's the actual proof?",
+                        dontSay: "Don't make vague promises. Don't claim certainty you don't have. Don't ignore the math.",
+                        starAnswer: {
+                            S: "The math works. Let me show you.",
+                            T: "Demonstrate that the numbers are realistic and the approach is proven.",
+                            A: "Foundation Training: 2-hour sessions, 50 people per session = 80 sessions. 3 sessions/week over 6 months = 78 sessions. Delivered by me plus Super Users I've trained.",
+                            R: "This is exactly how the Harassment Advisor program worked. I trained trainers who multiplied the reach. Same proven model."
+                        }
+                    },
+                    {
+                        category: "Hard Question",
+                        question: "You're a history major and Army officer, not a tech person. Why should we trust you with AI?",
+                        termHeader: "The Credibility Challenge",
+                        terminology: "This is actually your ADVANTAGE. You're proof the training works for non-technical people - and that's who their 4,000 employees are.",
+                        plainEnglish: "You don't have a CS degree. Why should we believe you know AI well enough to teach it?",
+                        dontSay: "Don't be defensive about your background. Don't oversell technical credentials you don't have.",
+                        starAnswer: {
+                            S: "That's exactly WHY you should trust me.",
+                            T: "Reframe my non-technical background as an advantage.",
+                            A: "I'm like your people. I'm a Gen X history major who learned through self-directed study. If I can build AI products and teach AI - so can your staff. I'm proof it works.",
+                            R: "Your 4,000 employees aren't all tech people. They need someone who understands their hesitation and meets them where they are."
+                        }
+                    },
+                    {
+                        category: "Hard Question",
+                        question: "How do you handle resistance when introducing AI to an organization?",
+                        termHeader: "The Resistance Reality",
+                        terminology: "Resistance is inevitable. 75% of employees worry AI will eliminate jobs. 41% admit sabotaging AI initiatives. 70% of change initiatives fail due to employee pushback.",
+                        plainEnglish: "People don't want this. How do you deal with that?",
+                        dontSay: "Don't dismiss resistance as 'fear of change.' Don't promise everyone will love it.",
+                        starAnswer: {
+                            S: "Resistance is the core challenge. 75% of employees fear AI will replace them - that's not irrational.",
+                            T: "Address resistance with respect, not dismissal.",
+                            A: "Four strategies: Survey first, find 'gray AI' users and make them allies, engage managers (9x impact on adoption), quick wins that matter to THEM.",
+                            R: "At Grievance Authority, I got buy-in by involving skeptics in design. Same approach here: show don't tell, involve resisters early."
+                        }
+                    },
+                    {
+                        category: "Hard Question",
+                        question: "What if people go through training and then don't use it?",
+                        termHeader: "The Adoption Gap",
+                        terminology: "Training completion ≠ adoption. 70-80% of AI projects fail due to lack of user adoption, not technical issues. The hard part is what happens AFTER training.",
+                        plainEnglish: "We've done training before. People forget it by Monday. Why would this be different?",
+                        dontSay: "Don't promise training will stick by itself. Don't focus on completion metrics.",
+                        starAnswer: {
+                            S: "That's exactly why this isn't a one-and-done workshop. Training alone has a 70% failure rate.",
+                            T: "Build ongoing support that keeps people using what they learned.",
+                            A: "Office Hours starting Week 2. Super Users as peer support. Division-specific playbooks. Progressive track for those who want to go deeper.",
+                            R: "The gym metaphor: A treadmill doesn't make anyone fit. You need the personal trainer who shows up Week 2. That's what I do."
+                        }
+                    },
+                    {
+                        category: "Hard Question",
+                        question: "Why not start with a pilot project to prove the concept first?",
+                        termHeader: "The Pilot Trap",
+                        terminology: "95% of AI pilots fail to deliver measurable returns (MIT). 8/10 companies get stuck in 'pilot purgatory' (PwC). Pilots create isolated wins that never scale.",
+                        plainEnglish: "Wouldn't it be safer to try this with 50 people first?",
+                        dontSay: "Don't agree that pilots are the safe choice. Show you understand why pilots fail.",
+                        starAnswer: {
+                            S: "Pilots are actually the riskier choice. 95% fail to deliver measurable returns. 8/10 companies get stuck in pilot mode forever.",
+                            T: "Explain why enterprise-wide capability beats isolated pilots.",
+                            A: "Pilots fail because: no clear ROI, ownership vacuum, isolated wins that can't stitch together. My approach: build basic capability across the entire workforce.",
+                            R: "You're not building a pilot; you're building the foundation for enterprise-wide capability. That's what scales."
+                        }
+                    },
+                    {
+                        category: "Hard Question",
+                        question: "Why start training in Week 2 instead of spending months assessing first?",
+                        termHeader: "Action Over Analysis",
+                        terminology: "Most consultants spend 3-6 months on discovery before anything happens. By then, people are skeptical and disengaged. Assessment paralysis is a real failure mode.",
+                        plainEnglish: "Isn't that rushing? Shouldn't we understand the organization first?",
+                        dontSay: "Don't dismiss assessment value. Show how you assess WHILE acting.",
+                        starAnswer: {
+                            S: "Assessment without action creates fatigue. People have seen consultants assess for months and deliver nothing.",
+                            T: "Show how to build value immediately while still learning.",
+                            A: "We assess WHILE training. Survey runs parallel. Training itself IS assessment - we see who engages, what questions they ask, where they struggle.",
+                            R: "This builds trust from the start. If I'm not delivering training by Week 2, something is wrong. That's my commitment."
+                        }
+                    }
+                ]
+            },
+
             "micro1-human-data-manager": {
                 meta: {
                     job_id: "micro1-human-data-manager",
@@ -1772,7 +2085,7 @@
         // ===============================
         // STATE
         // ===============================
-        let currentJobId = "micro1-human-data-manager";
+        let currentJobId = "cfmws-ai-adoption";
         let questions = [];
         let vocabulary = [];
         let currentIndex = 0;
